@@ -83,7 +83,7 @@ bool bank::is_digits(const string &str){
 void bank::manager(fstream &file){
     class managers{
         private:
-            int i;
+            int i, j;
             char mChoice, buf[1000], ch, pwd,pwd1[14], pwd2[14];
             string name,ID,email,pno,location,branchCode,ps;
             bank b;
@@ -117,13 +117,43 @@ void bank::manager(fstream &file){
                 strcat(buf,"|");
 
                 cout<<"ENTER THE 8-DIGIT MANAGER ID:"<<endl;
-                cin>>ID;
-                cout<<b.is_digits(ID);
+                for(;;){
+                    cin>>ID;
+                    if(b.is_digits(ID)){
+                        if(strlen(ID.c_str())==8){
+                            break;
+                        }else{
+                            cout<<"THE ID MUST BE 8 DIGITS!!!"<<endl;
+                        }
+                    }else{
+                        cout<<"THE ID MUST CONTAIN ONLY NUMERICAL DIGITS!!!"<<endl;
+                    }
+                }
                 strcat(buf,ID.c_str());
                 strcat(buf,"|");
 
                 cout<<"ENTER YOUR EMAIL-ID:"<<endl;
-                cin>>email;
+                while(true){
+                    cin>>email;
+                    for(i=0;i<strlen(email.c_str());i++){
+                        if (email[i]=='@'){
+                            for(j=i;j<strlen(email.c_str());j++){
+                                if (email[j]=='.'){
+                                    j=0;
+                                    break;
+                                }
+                            }
+                            if (j==0){
+                                i=0;
+                                break;
+                            }
+                        }
+                    }
+                    if (i==0 && j==0){
+                        break;
+                    }
+                    cout<<"ENTER A VALID EMAIL-ID"<<endl;
+                }
                 strcat(buf,email.c_str());
                 strcat(buf,"|");
 
@@ -187,8 +217,19 @@ void bank::manager(fstream &file){
                 strcat(buf,ps.c_str());
                 strcat(buf,"|");
 
-                cout<<"ENTER THE 10-DIGIT PHONE NUMBER:"<<endl;
-                cin>>pno;
+                cout<<"\nENTER THE 10-DIGIT PHONE NUMBER:"<<endl;
+                for(;;){
+                    cin>>pno;
+                    if(b.is_digits(pno)){
+                        if(strlen(pno.c_str())==10){
+                            break;
+                        }else{
+                            cout<<"THE PHONE NUMBER MUST BE 10 DIGITS!!!"<<endl;
+                        }
+                    }else{
+                        cout<<"THE PHONE NUMBER MUST CONTAIN ONLY NUMERICAL DIGITS!!!"<<endl;
+                    }
+                }
                 strcat(buf,pno.c_str());
                 strcat(buf,"|");
 
@@ -198,7 +239,18 @@ void bank::manager(fstream &file){
                 strcat(buf,"|");
 
                 cout<<"ENTER THE 6-DIGIT BRANCH CODE:"<<endl;
-                cin>>branchCode;
+                for(;;){
+                    cin>>branchCode;
+                    if(b.is_digits(branchCode)){
+                        if(strlen(branchCode.c_str())==6){
+                            break;
+                        }else{
+                            cout<<"THE BRANCH CODE MUST BE 6 DIGITS!!!"<<endl;
+                        }
+                    }else{
+                        cout<<"THE BRANCH CODE MUST CONTAIN ONLY NUMERICAL DIGITS!!!"<<endl;
+                    }
+                }
                 strcat(buf,branchCode.c_str());
                 strcat(buf,"\n");
 
@@ -226,6 +278,7 @@ int main(){
     if(b.ifFileExist("minfo.txt")){
         //...file exist
         cout<<"exist"<<endl;
+        managerInfo.open("minfo.txt",ios::out);
         mData = true;
         b.manager(managerInfo);
     }
