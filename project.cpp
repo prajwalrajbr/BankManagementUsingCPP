@@ -83,31 +83,54 @@ bool bank::is_digits(const string &str){
 void bank::manager(){
     class managers{
         private:
-        fstream file;
+            fstream file;
             int i, j;
             char mChoice, buf[1000], ch, pwd,pwd1[14], pwd2[14];
             string name,ID,email,pno,location,branchCode,ps;
             bank b;
             
         public:
-            managers(){
+            void managersDashBoard(){
+                cout<<"WELCOME MANAGER"<<endl;
                 if(mData){
-                    cout<<"WELCOME MANAGER"<<endl;
-                    cout<<"1: VIEW PROFILE"<<endl;
-                    cout<<"2: UPDATE PROFILE"<<endl;
-                    cout<<"3: VIEW ALL EMPLOYEES"<<endl;
-                    cout<<"4: ADD EMPLOYEE"<<endl;
-                    cout<<"5: UPDATE EMPLOYEE DATA"<<endl;
-                    cout<<"6: REMOVE EMPLOYEE"<<endl;
-                    cout<<"7: LOG-OUT"<<endl;
-                    cin>>mChoice;
+                    while(true){
+                        cout<<"1: VIEW PROFILE"<<endl;
+                        cout<<"2: UPDATE PROFILE"<<endl;
+                        cout<<"3: VIEW ALL EMPLOYEES"<<endl;
+                        cout<<"4: ADD EMPLOYEE"<<endl;
+                        cout<<"5: UPDATE EMPLOYEE DATA"<<endl;
+                        cout<<"6: REMOVE EMPLOYEE"<<endl;
+                        cout<<"7: LOG-OUT"<<endl;
+                        cin>>mChoice;
 
-                    switch(mChoice){
-
+                        switch(mChoice){
+                            case '1':
+                                cout<<"1";
+                                break;
+                            case '2':
+                                cout<<"2";
+                                break;
+                            case '3':
+                                cout<<"3";
+                                break;
+                            case '4':
+                                cout<<"4";
+                                break;
+                            case '5':
+                                cout<<"5";
+                                break;
+                            case '6':
+                                cout<<"6";
+                                break;
+                            default :
+                                cout<<"LOG-OUT"; 
+                                return;
+                        }
                     }
                 }else{
                     mData = true;
                     managerDataInput();
+                    managersDashBoard();
                 }
             }
             void managerDataInput(){
@@ -268,6 +291,7 @@ void bank::manager(){
             
     };
     managers m;
+    m.managersDashBoard();
     return;
 }
 
