@@ -52,7 +52,7 @@ class bank{
         string hash(string key);
         bool is_digits(const string &str);
 
-        void manager(fstream &file);
+        void manager();
 };
 
 //The fastest way to check if the file exists.
@@ -80,9 +80,10 @@ bool bank::is_digits(const string &str){
     return str.find_first_not_of("0123456789")==string::npos;
 }
 
-void bank::manager(fstream &file){
+void bank::manager(){
     class managers{
         private:
+        fstream file;
             int i, j;
             char mChoice, buf[1000], ch, pwd,pwd1[14], pwd2[14];
             string name,ID,email,pno,location,branchCode,ps;
@@ -110,6 +111,7 @@ void bank::manager(fstream &file){
                 }
             }
             void managerDataInput(){
+                file.open("minfo.txt",ios::out);
                 strcpy(buf,"");
                 cout<<"ENTER YOUR FULL NAME:"<<endl;
                 getline(cin,name);
@@ -254,8 +256,8 @@ void bank::manager(fstream &file){
                 strcat(buf,branchCode.c_str());
                 strcat(buf,"\n");
 
-                cout<<buf;
-                
+                file.write(buf,strlen(buf));
+                file.close();
             }
             void managerDataUpdate(fstream &file){
                 return;
@@ -275,19 +277,21 @@ int main(){
     bank b;
     fstream managerInfo;
 
+    cout<<"WELCOME TO \'BANK OF MIT\'"<<endl;
+
     if(b.ifFileExist("minfo.txt")){
         //...file exist
         cout<<"exist"<<endl;
-        managerInfo.open("minfo.txt",ios::out);
         mData = true;
-        b.manager(managerInfo);
+        b.manager();
     }
     else{
         //...file does not exist
         cout<<"not exist"<<endl;
         managerInfo.open("minfo.txt",ios::out);
+        managerInfo.close();
         cout<<"ENTER THE DETAILS FOR THE MANAGER ACCOUNT"<<endl;
-        b.manager(managerInfo);
+        b.manager();
 
     }
     char choice;
