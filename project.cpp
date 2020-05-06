@@ -60,11 +60,10 @@ inline bool bank::ifFileExist(const string& name){
     struct stat buffer;   
     return (stat (name.c_str(), &buffer) == 0); 
 }
-
 //A simple multiplicative hash, even though the collision rate is high, it is enough for our simple program.
 string bank::hash(string key){
 	unsigned int x = 5674356;
-	unsigned int hashVariable;
+	unsigned int hashVariable = 0;
 	for(int i = 0;i < key.length();i++){
 		hashVariable = hashVariable ^ ( key[i] );
 		hashVariable = hashVariable * x;
@@ -85,14 +84,58 @@ void bank::manager(){
         private:
             fstream file;
             int i, j;
-            char mChoice, buf[1000], ch, pwd,pwd1[14], pwd2[14];
+            char mChoice, buf[1000], ch, pwd,pwd1[14], pwd2[14],id[100],pwde[100],mname[100];
             string name,ID,email,pno,location,branchCode,ps;
             bank b;
             
         public:
             void managersDashBoard(){
-                cout<<"WELCOME MANAGER"<<endl;
                 if(mData){
+                    file.open("minfo.txt",ios::in);
+                    file.getline(mname,99,'|');
+                    file.getline(id,99,'|');
+                    for(i=0;i<2;i++){
+                        file.getline(pwde,99,'|');
+                    }
+                    file.close();
+                    j=0;
+                    while(true){
+                        cout<<"ENTER THE MANAGER ID : ";
+                        cin>>ID;
+                        cout<<"ENTER THE PASSWORD : ";
+                        getch();
+                        strcpy(pwd1,"");
+                        i = 0;
+                        while(true){
+                            pwd = getch();
+                            if (pwd=='\n'){
+                                break;
+                            }
+                            cout<<"*";
+                            ps=pwd;
+                            strcat(pwd1,ps.c_str());
+                            i++;
+                        }
+                        
+                        ps="";
+                        for(i=0;i<strlen(pwd1);i++){
+                            ps = ps+pwd1[i];
+                        }
+                        ps=b.hash(ps);
+                        if ((strcmp(ps.c_str(),pwde)==0)&&(strcmp(ID.c_str(),id)==0)){
+                            cout<<"\nSUCCESSFULLY LOGGED-IN"<<endl;
+                            break;
+                        }else{
+                            cout<<"\nTHE ENTERED USERNAME OR PASSWORD IS INCORRECT"<<endl;
+                            if(j==2){
+                                cout<<"TOO MANY ATTEMPTS";
+                                exit(1);
+                            }
+                        }
+                        j++;
+                    }
+                    cout<<"WELCOME "<<mname<<endl;
+                    
                     while(true){
                         cout<<"1: VIEW PROFILE"<<endl;
                         cout<<"2: UPDATE PROFILE"<<endl;
@@ -128,14 +171,14 @@ void bank::manager(){
                         }
                     }
                 }else{
-                    mData = true;
                     managerDataInput();
+                    mData = true;
                     managersDashBoard();
                 }
             }
             void managerDataInput(){
                 file.open("minfo.txt",ios::out);
-                strcpy(buf,"");
+                strcpy(buf,"");                
                 cout<<"ENTER YOUR FULL NAME:"<<endl;
                 getline(cin,name);
                 strcat(buf,name.c_str());
@@ -190,7 +233,6 @@ void bank::manager(){
                 i = 0;
                 while(true){
                     pwd = getch();
-                    cout<<"*";
                     if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
                         cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
                         goto startpwd1;
@@ -203,6 +245,7 @@ void bank::manager(){
                             goto startpwd1;
                         }
                     }
+                    cout<<"*";
                     ps=pwd;
                     strcat(pwd1,ps.c_str());
                     i++;
@@ -213,7 +256,6 @@ void bank::manager(){
                 i = 0;
                 while(true){
                     pwd = getch();
-                    cout<<"*";
                     if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
                         cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
                         goto startpwd2;
@@ -226,6 +268,7 @@ void bank::manager(){
                             goto startpwd2;
                         }
                     }
+                    cout<<"*";
                     ps=pwd;
                     strcat(pwd2,ps.c_str());
                     i++;
@@ -280,7 +323,9 @@ void bank::manager(){
                 strcat(buf,"\n");
 
                 file.write(buf,strlen(buf));
+                cout<<"MANAGER ACCOUNT SUCCESSFULLY CREATED..."<<endl;
                 file.close();
+                return;
             }
             void managerDataUpdate(fstream &file){
                 return;
@@ -305,9 +350,7 @@ int main(){
 
     if(b.ifFileExist("minfo.txt")){
         //...file exist
-        cout<<"exist"<<endl;
         mData = true;
-        b.manager();
     }
     else{
         //...file does not exist
@@ -316,7 +359,6 @@ int main(){
         managerInfo.close();
         cout<<"ENTER THE DETAILS FOR THE MANAGER ACCOUNT"<<endl;
         b.manager();
-
     }
     char choice;
     for(;;){
@@ -330,7 +372,7 @@ int main(){
         
         switch (choice){
             case '1':
-                cout<<"1"<<endl;
+                b.manager();
                 break;
             
             case '2':
