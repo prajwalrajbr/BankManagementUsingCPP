@@ -137,18 +137,33 @@ void bank::manager(){
                     cout<<"WELCOME "<<mname<<endl;
                     
                     while(true){
-                        cout<<"1: VIEW PROFILE"<<endl;
+                        cout<<"\n1: VIEW PROFILE"<<endl;
                         cout<<"2: UPDATE PROFILE"<<endl;
-                        cout<<"3: VIEW ALL EMPLOYEES"<<endl;
-                        cout<<"4: ADD EMPLOYEE"<<endl;
-                        cout<<"5: UPDATE EMPLOYEE DATA"<<endl;
+                        cout<<"3: ADD EMPLOYEE"<<endl;
+                        cout<<"4: UPDATE EMPLOYEE DATA"<<endl;
+                        cout<<"5: VIEW ALL EMPLOYEES"<<endl;
                         cout<<"6: REMOVE EMPLOYEE"<<endl;
                         cout<<"7: LOG-OUT"<<endl;
                         cin>>mChoice;
 
                         switch(mChoice){
-                            case '1':
-                                cout<<"1";
+                            case '1':    
+                                file.open("minfo.txt",ios::in);
+                                cout<<"\nMANAGER's DEAILS :"<<endl;
+                                file.getline(mname,99,'|');
+                                cout<<"FULL NAME : "<<mname<<endl;
+                                file.getline(mname,99,'|');
+                                cout<<"MANAGER-ID : "<<mname<<endl;
+                                file.getline(mname,99,'|');
+                                cout<<"EMAIL ADDRESS : "<<mname<<endl;
+                                file.getline(mname,99,'|');
+                                file.getline(mname,99,'|');
+                                cout<<"PHONE NO. : "<<mname<<endl;
+                                file.getline(mname,99,'|');
+                                cout<<"LOCATION OF THE BANK : "<<mname<<endl;
+                                file.getline(mname,99,'\n');
+                                cout<<"BRANCH CODE : "<<mname<<endl;
+                                file.close();
                                 break;
                             case '2':
                                 cout<<"2";
@@ -166,7 +181,7 @@ void bank::manager(){
                                 cout<<"6";
                                 break;
                             default :
-                                cout<<"LOG-OUT"; 
+                                cout<<"SUCCESSFULLY LOGGED-OUT"<<endl; 
                                 return;
                         }
                     }
@@ -184,7 +199,7 @@ void bank::manager(){
                 strcat(buf,name.c_str());
                 strcat(buf,"|");
 
-                cout<<"ENTER THE 8-DIGIT MANAGER ID:"<<endl;
+                cout<<"ENTER THE 8-DIGIT MANAGER-ID:"<<endl;
                 for(;;){
                     cin>>ID;
                     if(b.is_digits(ID)){
@@ -301,7 +316,7 @@ void bank::manager(){
                 strcat(buf,pno.c_str());
                 strcat(buf,"|");
 
-                cout<<"ENTER THE LOCATION:"<<endl;
+                cout<<"ENTER THE LOCATION OF THE BANK:"<<endl;
                 cin>>location;
                 strcat(buf,location.c_str());
                 strcat(buf,"|");
@@ -354,7 +369,6 @@ int main(){
     }
     else{
         //...file does not exist
-        cout<<"not exist"<<endl;
         managerInfo.open("minfo.txt",ios::out);
         managerInfo.close();
         cout<<"ENTER THE DETAILS FOR THE MANAGER ACCOUNT"<<endl;
@@ -363,7 +377,7 @@ int main(){
     char choice;
     for(;;){
 
-        cout<<"SELECT THE LOG-IN TYPE:"<<endl;
+        cout<<"\nSELECT THE LOG-IN TYPE:"<<endl;
         cout<<"1: BANK MANAGER LOG-IN"<<endl;
         cout<<"2: EMPLOYEE LOG-IN"<<endl;
         cout<<"3: ACCOUNT HOLDER LOG-IN"<<endl;
