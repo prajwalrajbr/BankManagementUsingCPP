@@ -521,7 +521,7 @@ void bank::manager(){
                 return;
             }
             void employeeDataInput(){
-                if(noOfEmp<6){
+                if(noOfEmp<5){
                     strcpy(buf,"|");      
                     cout<<"\nENTER THE FULL NAME OF THE EMPLOYEE:"<<endl;
                     getline(cin,name);
@@ -665,7 +665,6 @@ void bank::manager(){
                     strcat(buf,"|");
                     file.getline(mname,99,'|');
                     strcat(buf,mname);
-                    strcat(buf,"\n");
                     file.close();
 
                     file.open("erecord.txt",ios::app);
@@ -679,7 +678,8 @@ void bank::manager(){
 
                     eRRN++;
                     noOfEmp++;
-                    cout<<"MANAGER ACCOUNT SUCCESSFULLY CREATED..."<<endl;
+                    cout<<"EMPLOYEE ACCOUNT SUCCESSFULLY CREATED..."<<endl;
+                    getch();
                 }else{
                     cout<<"\nMAXIMUM NUMBER OF EMPLOYEES HAS BEEN CREATED"<<endl;
                     cout<<"REMOVE ANY EMPLOYEE TO ADD THE NEW EMPLOYEE"<<endl;
@@ -717,12 +717,14 @@ int main(){
             for(i=0;i<strlen(errn);i++){
                 s+=errn[i];
             }
+            stringstream rrn(s);
+            rrn>>eRRN;
             file.getline(errn,99,'#');
             noOfEmp++;
         }
-        stringstream rrn(s);
-        rrn>>eRRN;
-        eRRN++;
+        if(noOfEmp!=0){
+            eRRN++;
+        }
         file.close();
 
     }
