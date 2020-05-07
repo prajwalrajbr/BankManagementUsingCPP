@@ -43,6 +43,7 @@ char getch(){
 //To here.................................................................
 
 bool mData=false;
+int eRRN=0, noOfEmp=0;
 
 class bank{
     private:
@@ -155,7 +156,7 @@ void bank::manager(){
                                 managerDataUpdate();
                                 break;
                             case '3':
-                                cout<<"3";
+                                employeeDataInput();
                                 break;
                             case '4':
                                 cout<<"4";
@@ -182,7 +183,7 @@ void bank::manager(){
             }
             void managerDataInput(){
                 strcpy(buf,"");                
-                cout<<"ENTER YOUR FULL NAME:"<<endl;
+                cout<<"\nENTER YOUR FULL NAME:"<<endl;
                 getline(cin,name);
                 strcat(buf,name.c_str());
                 strcat(buf,"|");
@@ -359,7 +360,7 @@ void bank::manager(){
                 file.close();
 
                 strcpy(buf,"");                
-                cout<<"ENTER THE NEW NAME OF THE MANAGER:"<<endl;
+                cout<<"\nENTER THE NEW NAME OF THE MANAGER:"<<endl;
                 getch();
                 getline(cin,name);
                 strcat(buf,name.c_str());
@@ -519,7 +520,165 @@ void bank::manager(){
                 file.close();
                 return;
             }
-            
+            void employeeDataInput(){
+                
+                strcpy(buf,"|");      
+                cout<<"\nENTER THE FULL NAME OF THE EMPLOYEE:"<<endl;
+                getline(cin,name);
+                strcat(buf,name.c_str());
+                strcat(buf,"|");
+
+                cout<<"ENTER THE 8-DIGIT EMPLOYEE-ID:"<<endl;
+                for(;;){
+                    cin>>ID;
+                    if(b.is_digits(ID)){
+                        if(strlen(ID.c_str())==8){
+                            break;
+                        }else{
+                            cout<<"THE ID MUST BE 8 DIGITS!!!"<<endl;
+                        }
+                    }else{
+                        cout<<"THE ID MUST CONTAIN ONLY NUMERICAL DIGITS!!!"<<endl;
+                    }
+                }
+                strcat(buf,ID.c_str());
+                strcat(buf,"|");
+
+                cout<<"ENTER THE EMPLOYEE'S EMAIL-ID:"<<endl;
+                while(true){
+                    cin>>email;
+                    for(i=0;i<strlen(email.c_str());i++){
+                        if (email[i]=='@'){
+                            for(j=i;j<strlen(email.c_str());j++){
+                                if (email[j]=='.'){
+                                    j=0;
+                                    break;
+                                }
+                            }
+                            if (j==0){
+                                i=0;
+                                break;
+                            }
+                        }
+                    }
+                    if (i==0 && j==0){
+                        break;
+                    }
+                    cout<<"ENTER A VALID EMAIL-ID"<<endl;
+                }
+                strcat(buf,email.c_str());
+                strcat(buf,"|");
+
+                cout<<"ENTER THE PASSWORD FOR EMPLOYEE HAVING 8 TO 14 CHARACTERS:"<<endl;               
+                getch();
+
+                startpwd5:
+                strcpy(pwd1,"");
+                i = 0;
+                while(true){
+                    pwd = getch();
+                    if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
+                        if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                        }else{
+                            cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                            goto startpwd5;
+                        }
+                    }
+                    if (pwd=='\n'){
+                        if (i>7 && i<15){
+                            break;
+                        }else{
+                            cout<<"\nTHE PASSWORD MUST BE 8 TO 14 CHARACTERS!!!"<<endl;
+                            goto startpwd5;
+                        }
+                    }
+                    cout<<"*";
+                    ps=pwd;
+                    strcat(pwd1,ps.c_str());
+                    i++;
+                }
+                cout<<"\nENTER THE PASSWORD AGAIN"<<endl;
+                startpwd6:
+                strcpy(pwd2,"");
+                i = 0;
+                while(true){
+                    pwd = getch();
+                    if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
+                        if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                        }else{
+                            cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                            goto startpwd6;
+                        }
+                    }
+                    if (pwd=='\n'){
+                        if (i>7 && i<15){
+                            break;
+                        }else{
+                            cout<<"\nTHE PASSWORD MUST BE 8 TO 14 CHARACTERS!!!"<<endl;
+                            goto startpwd6;
+                        }
+                    }
+                    cout<<"*";
+                    ps=pwd;
+                    strcat(pwd2,ps.c_str());
+                    i++;
+                }
+                if ((strcmp(pwd1,pwd2))!=0){
+                    cout<<"PASSWORDS DOESN'T MATCH, ENTER THE PASSWORDS AGAIN"<<endl;
+                    goto startpwd5;
+                }
+                ps="";
+                for(i=0;i<strlen(pwd1);i++){
+                    ps = ps+pwd1[i];
+                }
+                ps = b.hash(ps);
+                strcat(buf,ps.c_str());
+                strcat(buf,"|");
+
+                cout<<"\nENTER THE 10-DIGIT PHONE NUMBER OF THE EMPLOYEE:"<<endl;
+                for(;;){
+                    cin>>pno;
+                    if(b.is_digits(pno)){
+                        if(strlen(pno.c_str())==10){
+                            break;
+                        }else{
+                            cout<<"THE PHONE NUMBER MUST BE 10 DIGITS!!!"<<endl;
+                        }
+                    }else{
+                        cout<<"THE PHONE NUMBER MUST CONTAIN ONLY NUMERICAL DIGITS!!!"<<endl;
+                    }
+                }
+                strcat(buf,pno.c_str());
+                strcat(buf,"|");
+
+                
+                file.open("minfo.txt",ios::in);
+                file.getline(mname,99,'|');
+                file.getline(mname,99,'|');
+                strcat(buf,mname);
+                strcat(buf,"|");
+                for(i=0;i<3;i++){
+                    file.getline(mname,99,'|');
+                }
+                file.getline(mname,99,'|');
+                strcat(buf,mname);
+                strcat(buf,"|");
+                file.getline(mname,99,'|');
+                strcat(buf,mname);
+                strcat(buf,"\n");
+                file.close();
+
+                file.open("erecord.txt",ios::app);
+                file<<eRRN;
+                file<<buf;
+                file.close();
+
+                file.open("eindex.txt",ios::app);
+                file<<eRRN<<"|"<<ID<<"|"<<ps<<"#";
+                cout<<"MANAGER ACCOUNT SUCCESSFULLY CREATED..."<<endl;
+                
+                return;
+            }
     };
     managers m;
     m.managersDashBoard();
@@ -541,6 +700,10 @@ int main(){
     else{
         //...file does not exist
         managerInfo.open("minfo.txt",ios::out);
+        managerInfo.close();
+        managerInfo.open("eindex.txt",ios::out);
+        managerInfo.close();
+        managerInfo.open("erecord.txt",ios::out);
         managerInfo.close();
         cout<<"ENTER THE DETAILS FOR THE MANAGER ACCOUNT"<<endl;
         b.manager();
