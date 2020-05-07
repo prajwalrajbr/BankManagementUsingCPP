@@ -84,7 +84,7 @@ void bank::manager(){
     class managers{
         private:
             fstream file;
-            int i, j;
+            int i, j, found;
             char mChoice, buf[1000], ch, pwd,pwd1[14], pwd2[14],id[100],pwde[100],mname[100];
             string name,ID,email,pno,location,branchCode,ps;
             bank b;
@@ -174,7 +174,11 @@ void bank::manager(){
                                 cout<<"5";
                                 break;
                             case '6':
-                                cout<<"6";
+                                employeeDataSearch();
+                                cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                                getch();
+                                getch();
+                                system("clear");
                                 break;
                             case '7':
                                 cout<<"7";
@@ -702,9 +706,14 @@ void bank::manager(){
                     file.getline(mname,99,'|');
                     strcat(buf,mname);
                     strcat(buf,"|");
-                    file.getline(mname,99,'|');
+                    file.getline(mname,99,'\n');
                     strcat(buf,mname);
                     file.close();
+
+                    while(strlen(buf)<=200){
+                        strcat(buf,"!");
+                    }
+                    strcat(buf,"\n");
 
                     file.open("erecord.txt",ios::app);
                     file<<eRRN;
@@ -726,6 +735,57 @@ void bank::manager(){
                 }    
                 return;
                 
+            }
+            void employeeDataUpdate(){
+
+            }
+            void employeeDataSearch(){
+                found=0;
+                cout<<"ENTER THE EMPLOYEE-ID TO BE SEARCHED : ";
+                cin>>ID;
+                file.open("eindex.txt",ios::in);
+                while(!file.eof()){
+                    file.getline(mname,99,'|');
+                    file.getline(mname,99,'|');
+                    if(strcmp(ID.c_str(),mname)==0){
+                        cout<<"EMPLOYEE WITH ID "<<ID<<" FOUND\n"<<endl;
+                        found=1;
+                        break;
+                    }
+                    file.getline(mname,99,'#');
+                }
+                file.close();
+                if(found==0){
+                    cout<<"EMPLOYEE WITH ID '"<<ID<<"' NOT FOUND"<<endl;
+                    return;
+                }
+                cout<<"EMPLOYEE DETAILS : ";
+                file.open("erecord.txt",ios::in);
+                while(!file.eof()){                   
+                    file.getline(mname,99,'|');        
+                    file.getline(mname,99,'|');
+                    file.getline(buf,99,'|');
+                    if(strcmp(buf,ID.c_str())==0){
+                        cout<<"EMPLOYEE NAME : "<<mname<<endl; 
+                        cout<<"EMPLOYEE-ID : "<<buf<<endl;                       
+                        file.getline(buf,99,'|');
+                        cout<<"EMPLOYEE EMAIL ADDRESS : "<<buf<<endl;                        
+                        file.getline(buf,99,'|');                      
+                        file.getline(buf,99,'|');
+                        cout<<"EMPLOYEE PHONE NO. : "<<buf<<endl;                        
+                        file.getline(buf,99,'|');
+                        cout<<"ADDED BY MANAGER-ID : "<<buf<<endl;                        
+                        file.getline(buf,99,'|');
+                        cout<<"LOCATION OF THE BANK : "<<buf<<endl;                        
+                        file.getline(buf,99,'!');
+                        cout<<"BRANCH CODE : "<<buf<<endl;
+                        file.close();
+                        return;
+                    }
+                    file.getline(buf,999,'\n');
+                }
+                file.close();
+                return;
             }
     };
     managers m;
