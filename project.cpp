@@ -248,8 +248,11 @@ void bank::manager(){
                 while(true){
                     pwd = getch();
                     if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
-                        cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
-                        goto startpwd1;
+                        if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                        }else{
+                            cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                            goto startpwd1;
+                        }
                     }
                     if (pwd=='\n'){
                         if (i>7 && i<15){
@@ -271,8 +274,11 @@ void bank::manager(){
                 while(true){
                     pwd = getch();
                     if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
-                        cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
-                        goto startpwd2;
+                        if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                        }else{
+                            cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                            goto startpwd2;
+                        }
                     }
                     if (pwd=='\n'){
                         if (i>7 && i<15){
@@ -420,8 +426,11 @@ void bank::manager(){
                 while(true){
                     pwd = getch();
                     if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
-                        cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
-                        goto startpwd3;
+                        if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                        }else{
+                            cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                            goto startpwd3;
+                        }
                     }
                     if (pwd=='\n'){
                         if (i>7 && i<15){
@@ -443,8 +452,11 @@ void bank::manager(){
                 while(true){
                     pwd = getch();
                     if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
-                        cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
-                        goto startpwd4;
+                        if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                        }else{                        
+                            cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                            goto startpwd4;
+                        }
                     }
                     if (pwd=='\n'){
                         if (i>7 && i<15){
