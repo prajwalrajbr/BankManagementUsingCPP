@@ -92,6 +92,7 @@ void bank::manager(){
         public:
             void managersDashBoard(){
                 if(mData){
+                    system("clear");
                     file.open("minfo.txt",ios::in);
                     file.getline(mname,99,'|');
                     file.getline(id,99,'|');
@@ -135,6 +136,7 @@ void bank::manager(){
                         }
                         j++;
                     }
+                    system("clear");
                     cout<<"WELCOME "<<mname<<endl;
                     
                     while(true){
@@ -147,16 +149,23 @@ void bank::manager(){
                         cout<<"7: REMOVE EMPLOYEE"<<endl;
                         cout<<"8: LOG-OUT"<<endl;
                         mChoice = getch();
+                        system("clear");
 
                         switch(mChoice){
                             case '1':
                                 managerDataDisplay();
+                                cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                                getch();
+                                system("clear");
                                 break;
                             case '2':
                                 managerDataUpdate();
                                 break;
                             case '3':
                                 employeeDataInput();
+                                cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                                getch();
+                                system("clear");
                                 break;
                             case '4':
                                 cout<<"4";
@@ -182,9 +191,15 @@ void bank::manager(){
                 }
             }
             void managerDataInput(){
-                strcpy(buf,"");                
-                cout<<"\nENTER YOUR FULL NAME:"<<endl;
-                getline(cin,name);
+                strcpy(buf,""); 
+                while(true){            
+                    cout<<"\nENTER YOUR FULL NAME:"<<endl;
+                    getline(cin,name);
+                    if(strlen(name.c_str())<1){
+                    }else{
+                        break;
+                    }
+                }
                 strcat(buf,name.c_str());
                 strcat(buf,"|");
 
@@ -311,8 +326,15 @@ void bank::manager(){
                 strcat(buf,pno.c_str());
                 strcat(buf,"|");
 
-                cout<<"ENTER THE LOCATION OF THE BANK:"<<endl;
-                cin>>location;
+                getch();
+                while(true){
+                    cout<<"ENTER THE LOCATION OF THE BANK:"<<endl;
+                    getline(cin,location);
+                    if(strlen(location.c_str())<1){
+                    }else{
+                        break;
+                    }
+                }
                 strcat(buf,location.c_str());
                 strcat(buf,"|");
 
@@ -355,14 +377,20 @@ void bank::manager(){
                 file.getline(mname,99,'\n');
                 branchCode="";
                 for(i=0;i<strlen(mname);i++){
-                    branchCode = location+mname[i];
+                    branchCode = branchCode+mname[i];
                 }
                 file.close();
 
                 strcpy(buf,"");                
                 cout<<"\nENTER THE NEW NAME OF THE MANAGER:"<<endl;
-                getch();
-                getline(cin,name);
+                while(true){
+                    getline(cin,name);
+                    if(strlen(name.c_str())<1){
+                        cout<<"\nENTER THE NEW NAME OF THE MANAGER:"<<endl;
+                    }else{
+                        break;
+                    }
+                }
                 strcat(buf,name.c_str());
                 strcat(buf,"|");
 
@@ -498,7 +526,12 @@ void bank::manager(){
                 file.open("minfo.txt",ios::out);
                 file.write(buf,strlen(buf));
                 file.close();
+                system("clear");
                 cout<<"MANAGER ACCOUNT SUCCESSFULLY UPDATED..."<<endl;
+                cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                getch();
+                getch();
+                system("clear");
                 return;
             }
             void managerDataDisplay(){        
@@ -522,9 +555,15 @@ void bank::manager(){
             }
             void employeeDataInput(){
                 if(noOfEmp<5){
-                    strcpy(buf,"|");      
-                    cout<<"\nENTER THE FULL NAME OF THE EMPLOYEE:"<<endl;
-                    getline(cin,name);
+                    strcpy(buf,"|");
+                    while(true){            
+                        cout<<"\nENTER THE FULL NAME OF THE EMPLOYEE:"<<endl;
+                        getline(cin,name);
+                        if(strlen(name.c_str())<1){
+                        }else{
+                            break;
+                        }
+                    }
                     strcat(buf,name.c_str());
                     strcat(buf,"|");
 
@@ -678,6 +717,7 @@ void bank::manager(){
 
                     eRRN++;
                     noOfEmp++;
+                    system("clear");
                     cout<<"EMPLOYEE ACCOUNT SUCCESSFULLY CREATED..."<<endl;
                     getch();
                 }else{
@@ -702,7 +742,8 @@ int main(){
     int i;
     string s;
 
-
+    
+    system("clear");
     cout<<"WELCOME TO \'BANK OF MIT\'"<<endl;
 
     if(b.ifFileExist("minfo.txt")){
