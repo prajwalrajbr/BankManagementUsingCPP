@@ -142,28 +142,14 @@ void bank::manager(){
                         cout<<"3: ADD EMPLOYEE"<<endl;
                         cout<<"4: UPDATE EMPLOYEE DATA"<<endl;
                         cout<<"5: VIEW ALL EMPLOYEES"<<endl;
-                        cout<<"6: REMOVE EMPLOYEE"<<endl;
-                        cout<<"7: LOG-OUT"<<endl;
-                        cin>>mChoice;
+                        cout<<"6: SEARCH EMPLOYEE"<<endl;
+                        cout<<"7: REMOVE EMPLOYEE"<<endl;
+                        cout<<"8: LOG-OUT"<<endl;
+                        mChoice = getch();
 
                         switch(mChoice){
-                            case '1':    
-                                file.open("minfo.txt",ios::in);
-                                cout<<"\nMANAGER's DEAILS :"<<endl;
-                                file.getline(mname,99,'|');
-                                cout<<"FULL NAME : "<<mname<<endl;
-                                file.getline(mname,99,'|');
-                                cout<<"MANAGER-ID : "<<mname<<endl;
-                                file.getline(mname,99,'|');
-                                cout<<"EMAIL ADDRESS : "<<mname<<endl;
-                                file.getline(mname,99,'|');
-                                file.getline(mname,99,'|');
-                                cout<<"PHONE NO. : "<<mname<<endl;
-                                file.getline(mname,99,'|');
-                                cout<<"LOCATION OF THE BANK : "<<mname<<endl;
-                                file.getline(mname,99,'\n');
-                                cout<<"BRANCH CODE : "<<mname<<endl;
-                                file.close();
+                            case '1':
+                                managerDataDisplay();
                                 break;
                             case '2':
                                 managerDataUpdate();
@@ -179,6 +165,9 @@ void bank::manager(){
                                 break;
                             case '6':
                                 cout<<"6";
+                                break;
+                            case '7':
+                                cout<<"7";
                                 break;
                             default :
                                 cout<<"SUCCESSFULLY LOGGED-OUT"<<endl; 
@@ -511,7 +500,23 @@ void bank::manager(){
                 cout<<"MANAGER ACCOUNT SUCCESSFULLY UPDATED..."<<endl;
                 return;
             }
-            void managerDataDisplay(fstream &file){
+            void managerDataDisplay(){        
+                file.open("minfo.txt",ios::in);
+                cout<<"\nMANAGER's DEAILS :"<<endl;
+                file.getline(mname,99,'|');
+                cout<<"FULL NAME : "<<mname<<endl;
+                file.getline(mname,99,'|');
+                cout<<"MANAGER-ID : "<<mname<<endl;
+                file.getline(mname,99,'|');
+                cout<<"EMAIL ADDRESS : "<<mname<<endl;
+                file.getline(mname,99,'|');
+                file.getline(mname,99,'|');
+                cout<<"PHONE NO. : "<<mname<<endl;
+                file.getline(mname,99,'|');
+                cout<<"LOCATION OF THE BANK : "<<mname<<endl;
+                file.getline(mname,99,'\n');
+                cout<<"BRANCH CODE : "<<mname<<endl;
+                file.close();
                 return;
             }
             
@@ -548,7 +553,7 @@ int main(){
         cout<<"2: EMPLOYEE LOG-IN"<<endl;
         cout<<"3: ACCOUNT HOLDER LOG-IN"<<endl;
         cout<<"4: EXIT"<<endl;       
-        cin>>choice;
+        choice = getch();
         
         switch (choice){
             case '1':
