@@ -145,7 +145,8 @@ void bank::manager(){
                     cout<<"WELCOME "<<mname<<endl;
                     
                     while(true){
-                        cout<<"\n1: VIEW PROFILE"<<endl;
+                        cout<<"\n------BANK OF MIT------"<<endl;
+                        cout<<"1: VIEW PROFILE"<<endl;
                         cout<<"2: UPDATE PROFILE"<<endl;
                         cout<<"3: ADD EMPLOYEE"<<endl;
                         cout<<"4: UPDATE EMPLOYEE DATA"<<endl;
@@ -173,7 +174,11 @@ void bank::manager(){
                                 system("clear");
                                 break;
                             case '4':
-                                cout<<"4";
+                                employeeDataUpdate();
+                                cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                                getch();
+                                getch();
+                                system("clear");
                                 break;
                             case '5':
                                 cout<<"5";
@@ -190,6 +195,7 @@ void bank::manager(){
                                 cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
                                 getch();
                                 getch();
+                                system("clear");
                                 break;
                             default :
                                 cout<<"SUCCESSFULLY LOGGED-OUT"<<endl; 
@@ -394,11 +400,11 @@ void bank::manager(){
                 file.close();
 
                 strcpy(buf,"");                
-                cout<<"\nENTER THE NEW NAME OF THE MANAGER:"<<endl;
+                cout<<"\nENTER THE UPDATED NAME OF THE MANAGER:"<<endl;
                 while(true){
                     getline(cin,name);
                     if(strlen(name.c_str())<1){
-                        cout<<"\nENTER THE NEW NAME OF THE MANAGER:"<<endl;
+                        cout<<"\nENTER THE UPDATED NAME OF THE MANAGER:"<<endl;
                     }else{
                         break;
                     }
@@ -406,7 +412,7 @@ void bank::manager(){
                 strcat(buf,name.c_str());
                 strcat(buf,"|");
 
-                cout<<"ENTER THE  NEW 8-DIGIT MANAGER-ID:"<<endl;
+                cout<<"ENTER THE NEW 8-DIGIT MANAGER-ID:"<<endl;
                 for(;;){
                     cin>>ID;
                     if(b.is_digits(ID)){
@@ -746,6 +752,205 @@ void bank::manager(){
                 
             }
             void employeeDataUpdate(){
+                found=0;
+                cout<<"ENTER THE EMPLOYEE-ID TO BE UPDATED : ";
+                cin>>ID; 
+                file.open("eindex.txt",ios::in);
+                while(!file.eof()){
+                    file.getline(mname,99,'|');
+                    file.getline(mname,99,'|');
+                    if(strcmp(ID.c_str(),mname)==0){
+                        cout<<"EMPLOYEE WITH ID "<<ID<<" FOUND\n"<<endl;
+                        found=1;
+                        break;
+                    }
+                    file.getline(mname,99,'#');
+                }
+                file.close();
+                if(found==0){
+                    cout<<"EMPLOYEE WITH ID '"<<ID<<"' NOT FOUND"<<endl;
+                    return;
+                }
+                while(true){            
+                    cout<<"\nENTER THE UPDATED NAME OF THE EMPLOYEE:"<<endl;
+                    getch();
+                    getline(cin,name);
+                    if(strlen(name.c_str())<1){
+                    }else{
+                        break;
+                    }
+                }
+
+                cout<<"ENTER THE EMPLOYEE'S NEW EMAIL-ID:"<<endl;
+                while(true){
+                    cin>>email;
+                    for(i=0;i<strlen(email.c_str());i++){
+                        if (email[i]=='@'){
+                            for(j=i;j<strlen(email.c_str());j++){
+                                if (email[j]=='.'){
+                                    j=0;
+                                    break;
+                                }
+                            }
+                            if (j==0){
+                                i=0;
+                                break;
+                            }
+                        }
+                    }
+                    if (i==0 && j==0){
+                        break;
+                    }
+                    cout<<"ENTER A VALID EMAIL-ID"<<endl;
+                }
+
+                cout<<"ENTER THE NEW PASSWORD FOR EMPLOYEE HAVING 8 TO 14 CHARACTERS:"<<endl;               
+                getch();
+
+                startpwd7:
+                strcpy(pwd1,"");
+                i = 0;
+                while(true){
+                        pwd = getch();
+                        if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
+                            if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                            }else{
+                                cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                                goto startpwd7;
+                            }
+                        }
+                        if (pwd=='\n'){
+                            if (i>7 && i<15){
+                                break;
+                            }else{
+                                cout<<"\nTHE PASSWORD MUST BE 8 TO 14 CHARACTERS!!!"<<endl;
+                                goto startpwd7;
+                            }
+                        }
+                        cout<<"*";
+                        ps=pwd;
+                        strcat(pwd1,ps.c_str());
+                        i++;
+                }
+                cout<<"\nENTER THE PASSWORD AGAIN"<<endl;
+                startpwd8:
+                strcpy(pwd2,"");
+                i = 0;
+                while(true){
+                        pwd = getch();
+                        if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
+                            if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                            }else{
+                                cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                                goto startpwd8;
+                            }
+                        }
+                        if (pwd=='\n'){
+                            if (i>7 && i<15){
+                                break;
+                            }else{
+                                cout<<"\nTHE PASSWORD MUST BE 8 TO 14 CHARACTERS!!!"<<endl;
+                                goto startpwd8;
+                            }
+                        }
+                        cout<<"*";
+                        ps=pwd;
+                        strcat(pwd2,ps.c_str());
+                        i++;
+                }
+                if ((strcmp(pwd1,pwd2))!=0){
+                    cout<<"PASSWORDS DOESN'T MATCH, ENTER THE PASSWORDS AGAIN"<<endl;
+                    goto startpwd7;
+                }
+                ps="";
+                for(i=0;i<strlen(pwd1);i++){
+                    ps = ps+pwd1[i];
+                }
+                ps = b.hash(ps);
+
+                cout<<"\nENTER THE NEW 10-DIGIT PHONE NUMBER OF THE EMPLOYEE:"<<endl;
+                for(;;){
+                        cin>>pno;
+                        if(b.is_digits(pno)){
+                            if(strlen(pno.c_str())==10){
+                                break;
+                            }else{
+                                cout<<"THE PHONE NUMBER MUST BE 10 DIGITS!!!"<<endl;
+                            }
+                        }else{
+                            cout<<"THE PHONE NUMBER MUST CONTAIN ONLY NUMERICAL DIGITS!!!"<<endl;
+                        }
+                }
+
+                file.open("eindex.txt",ios::in);
+                i=0;
+                while(!file.eof()){
+                    file.getline(e[i].rrn,99,'|');
+                    file.getline(e[i].EID,99,'|');
+                    file.getline(e[i].pwd,99,'#');
+                    i++;
+                }
+                file.close();
+                file.open("eindex.txt",ios::out);
+                for(i=0;i<noOfEmp;i++){
+                    if(strcmp(e[i].EID,ID.c_str())==0){
+                        file<<e[i].rrn<<"|"<<e[i].EID<<"|"<<ps<<"#";
+                    }else{
+                        file<<e[i].rrn<<"|"<<e[i].EID<<"|"<<e[i].pwd<<"#";
+                    }
+                }
+                file.close();
+                file.open("erecord.txt",ios::in);
+                i=0;
+                while(!file.eof()){
+                    file.getline(e[i].rrn,99,'|');
+                    file.getline(e[i].name,99,'|');
+                    file.getline(e[i].EID,99,'|');
+                    file.getline(e[i].email,99,'|');
+                    file.getline(e[i].pwd,99,'|');
+                    file.getline(e[i].pno,99,'|');
+                    file.getline(e[i].addedBy,99,'|');
+                    file.getline(e[i].location,99,'|');
+                    file.getline(e[i].branchCode,99,'!');
+                    file.getline(e[i].buf,200,'\n');
+                    strcat(e[i].buf,"!");
+                    i++;
+                }
+                file.close();
+                file.open("erecord.txt",ios::out);                
+                for(i=0;i<noOfEmp;i++){
+                    if(strcmp(e[i].EID,ID.c_str())==0){
+                        strcpy(buf,e[i].rrn);
+                        strcat(buf,"|");
+                        strcat(buf,name.c_str());
+                        strcat(buf,"|");
+                        strcat(buf,e[i].EID);
+                        strcat(buf,"|");
+                        strcat(buf,email.c_str());
+                        strcat(buf,"|");
+                        strcat(buf,ps.c_str());
+                        strcat(buf,"|");
+                        strcat(buf,pno.c_str());
+                        strcat(buf,"|");
+                        strcat(buf,e[i].addedBy);
+                        strcat(buf,"|");
+                        strcat(buf,e[i].location);
+                        strcat(buf,"|");
+                        strcat(buf,e[i].branchCode);
+                        strcat(buf,"!");
+                        while(strlen(buf)<200){
+                            strcat(buf,"!");
+                        }
+                        strcat(buf,"\n");
+                        file<<buf;
+                        cout<<"EMPLOYEE '"<<e[i].name<<"' WITH EMPOYEE-ID '"<<e[i].EID<<"' SUCCESSFULLY UPDATED"<<endl;
+                        
+                    }else{
+                        file<<e[i].rrn<<"|"<<e[i].name<<"|"<<e[i].EID<<"|"<<e[i].email<<"|"<<e[i].pwd<<"|"<<e[i].pno<<"|"<<e[i].addedBy<<"|"<<e[i].location<<"|"<<e[i].branchCode<<e[i].buf<<"\n";
+                    }
+                }
+                file.close();
+                return;
 
             }
             void employeeDataSearch(){
@@ -919,6 +1124,7 @@ int main(){
     char choice;
     for(;;){
 
+        cout<<"------BANK OF MIT------"<<endl;
         cout<<"\nSELECT THE LOG-IN TYPE:"<<endl;
         cout<<"1: BANK MANAGER LOG-IN"<<endl;
         cout<<"2: EMPLOYEE LOG-IN"<<endl;
