@@ -93,6 +93,7 @@ void bank::manager(){
             string name,ID,email,pno,location,branchCode,ps;
             bank b;
             struct emp e[6];
+            unsigned int sort[6];
             
         public:
             void managersDashBoard(){
@@ -153,7 +154,8 @@ void bank::manager(){
                         cout<<"5: VIEW ALL EMPLOYEES"<<endl;
                         cout<<"6: SEARCH EMPLOYEE"<<endl;
                         cout<<"7: REMOVE EMPLOYEE"<<endl;
-                        cout<<"8: LOG-OUT"<<endl;
+                        cout<<"8: VIEW TRANSACTIONS"<<endl;
+                        cout<<"9: LOG-OUT"<<endl;
                         mChoice = getch();
                         system("clear");
 
@@ -181,7 +183,10 @@ void bank::manager(){
                                 system("clear");
                                 break;
                             case '5':
-                                cout<<"5";
+                                viewAllEmployees();
+                                cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                                getch();
+                                system("clear");
                                 break;
                             case '6':
                                 employeeDataSearch();
@@ -196,6 +201,9 @@ void bank::manager(){
                                 getch();
                                 getch();
                                 system("clear");
+                                break;
+                            case '8':
+                                cout<<"NOT IMPLEMENTED";
                                 break;
                             default :
                                 cout<<"SUCCESSFULLY LOGGED-OUT"<<endl; 
@@ -1066,6 +1074,85 @@ void bank::manager(){
                 }
                 file.close();
                 noOfEmp--;
+                return;
+            }
+            void viewAllEmployees(){
+                file.open("eindex.txt",ios::in);                
+                i=0;
+                while(!file.eof()){
+                    file.getline(e[i].rrn,99,'|');
+                    file.getline(e[i].EID,99,'|');
+                    ps="";
+                    for(j=0;j<strlen(e[i].EID);j++){
+                        ps+=e[i].EID[j];
+                    }
+                    stringstream s(ps);
+                    s>>sort[i];
+                    file.getline(e[i].pwd,99,'#');
+                    i++;
+                }
+                file.close();
+                
+                //key sorting using bubble sort 
+                for(i=0;i<noOfEmp-1;i++){
+                    for(j=0;j<noOfEmp-i-1;j++){
+                        if(sort[j]>sort[j+1]){
+                            sort[j]=sort[j]+sort[j+1];
+                            sort[j+1]=sort[j]-sort[j+1];
+                            sort[j]=sort[j]-sort[j+1];
+                        }
+
+                    }
+                }
+                
+                file.open("eindex.txt",ios::out);  
+                for(i=0;i<noOfEmp;i++){
+                    for(j=0;j<noOfEmp;j++){
+                        if(strcmp(e[j].EID,to_string(sort[i]).c_str())==0){
+                            file<<e[j].rrn<<"|"<<e[j].EID<<"|"<<e[j].pwd<<"#";
+                        }
+                    }
+                }
+                file.close();
+                
+                file.open("erecord.txt",ios::in); 
+                i=0;
+                while(!file.eof()){               
+                    file.getline(e[i].rrn,99,'|');
+                    file.getline(e[i].name,99,'|');
+                    file.getline(e[i].EID,99,'|');                       
+                    file.getline(e[i].email,99,'|');                        
+                        file.getline(e[i].pwd,99,'|');                      
+                        file.getline(e[i].pno,99,'|');                       
+                        file.getline(e[i].addedBy,99,'|');                       
+                        file.getline(e[i].location,99,'|');                        
+                        file.getline(e[i].branchCode,99,'!');                      
+                        file.getline(e[i].buf,200,'\n');
+                        i++;
+                }
+                file.close(); 
+
+                cout<<"RRN"<<" |"<<"EID"<<"      |"<<"EMPLOYEE NAME"<<endl;
+                for(i=0;i<noOfEmp;i++){
+                    for(j=0;j<noOfEmp;j++){
+                        if(strcmp(e[j].EID,to_string(sort[i]).c_str())==0){
+                            strcpy(buf,"");
+                            strcat(buf,e[j].rrn);
+                            while(strlen(buf)<4){
+                                strcat(buf," ");
+                            }
+                            strcat(buf,"|");
+                            strcat(buf,e[j].EID);
+                            while(strlen(buf)<14){
+                                strcat(buf," ");
+                            }
+                            strcat(buf,"|");
+                            strcat(buf,e[j].name);
+                            strcat(buf,"\n");
+                            cout<<buf;
+                        }
+                    }
+                }
                 return;
             }
     };
