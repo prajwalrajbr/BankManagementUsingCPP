@@ -45,6 +45,10 @@ char getch(){
 bool mData=false;
 int eRRN=0, noOfEmp=0;
 
+struct emp{
+    char rrn[10], name[100], EID[10], email[100], pwd[50], pno[20], addedBy[10], location[100], branchCode[10], buf[300];
+};
+
 class bank{
     private:
         char username[20], password[16];
@@ -88,6 +92,7 @@ void bank::manager(){
             char mChoice, buf[1000], ch, pwd,pwd1[14], pwd2[14],id[100],pwde[100],mname[100];
             string name,ID,email,pno,location,branchCode,ps;
             bank b;
+            struct emp e[6];
             
         public:
             void managersDashBoard(){
@@ -181,7 +186,10 @@ void bank::manager(){
                                 system("clear");
                                 break;
                             case '7':
-                                cout<<"7";
+                                removeEmployee();
+                                cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                                getch();
+                                getch();
                                 break;
                             default :
                                 cout<<"SUCCESSFULLY LOGGED-OUT"<<endl; 
@@ -559,7 +567,9 @@ void bank::manager(){
             }
             void employeeDataInput(){
                 if(noOfEmp<5){
-                    strcpy(buf,"|");
+
+                    strcpy(buf,to_string(eRRN).c_str());
+                    strcat(buf,"|");
                     while(true){            
                         cout<<"\nENTER THE FULL NAME OF THE EMPLOYEE:"<<endl;
                         getline(cin,name);
@@ -710,13 +720,12 @@ void bank::manager(){
                     strcat(buf,mname);
                     file.close();
 
-                    while(strlen(buf)<=200){
+                    while(strlen(buf)<200){
                         strcat(buf,"!");
                     }
                     strcat(buf,"\n");
 
                     file.open("erecord.txt",ios::app);
-                    file<<eRRN;
                     file<<buf;
                     file.close();
 
@@ -787,6 +796,73 @@ void bank::manager(){
                 file.close();
                 return;
             }
+            void removeEmployee(){
+                found=0;
+                cout<<"ENTER THE EMPLOYEE-ID TO BE REMOVED : ";
+                cin>>ID; 
+                file.open("eindex.txt",ios::in);
+                while(!file.eof()){
+                    file.getline(mname,99,'|');
+                    file.getline(mname,99,'|');
+                    if(strcmp(ID.c_str(),mname)==0){
+                        cout<<"EMPLOYEE WITH ID "<<ID<<" FOUND\n"<<endl;
+                        found=1;
+                        break;
+                    }
+                    file.getline(mname,99,'#');
+                }
+                file.close();
+                if(found==0){
+                    cout<<"EMPLOYEE WITH ID '"<<ID<<"' NOT FOUND"<<endl;
+                    return;
+                }
+                file.open("eindex.txt",ios::in);
+                i=0;
+                while(!file.eof()){
+                    file.getline(e[i].rrn,99,'|');
+                    file.getline(e[i].EID,99,'|');
+                    file.getline(e[i].pwd,99,'#');
+                    i++;
+                }
+                file.close();
+                file.open("eindex.txt",ios::out);
+                for(i=0;i<noOfEmp;i++){
+                    if(strcmp(e[i].EID,ID.c_str())==0){
+                    }else{
+                        file<<e[i].rrn<<"|"<<e[i].EID<<"|"<<e[i].pwd<<"#";
+                    }
+                }
+                file.close();
+                file.open("erecord.txt",ios::in);
+                i=0;
+                while(!file.eof()){
+                    file.getline(e[i].rrn,99,'|');
+                    file.getline(e[i].name,99,'|');
+                    file.getline(e[i].EID,99,'|');
+                    file.getline(e[i].email,99,'|');
+                    file.getline(e[i].pwd,99,'|');
+                    file.getline(e[i].pno,99,'|');
+                    file.getline(e[i].addedBy,99,'|');
+                    file.getline(e[i].location,99,'|');
+                    file.getline(e[i].branchCode,99,'!');
+                    file.getline(e[i].buf,200,'\n');
+                    strcat(e[i].buf,"!");
+                    i++;
+                }
+                file.close();
+                file.open("erecord.txt",ios::out);                
+                for(i=0;i<noOfEmp;i++){
+                    if(strcmp(e[i].EID,ID.c_str())==0){
+                        cout<<"EMPLOYEE '"<<e[i].name<<"' WITH EMPOYEE-ID '"<<e[i].EID<<"' SUCCESSFULLY REMOVED"<<endl;
+                        
+                    }else{
+                        file<<e[i].rrn<<"|"<<e[i].name<<"|"<<e[i].EID<<"|"<<e[i].email<<"|"<<e[i].pwd<<"|"<<e[i].pno<<"|"<<e[i].addedBy<<"|"<<e[i].location<<"|"<<e[i].branchCode<<e[i].buf<<"\n";
+                    }
+                }
+                file.close();
+                noOfEmp--;
+                return;
+            }
     };
     managers m;
     m.managersDashBoard();
@@ -798,7 +874,7 @@ void bank::manager(){
 int main(){
     bank b;
     fstream file;
-    char errn[100],ps[100];
+    char errn[1000],ps[100];
     int i;
     string s;
 
@@ -811,7 +887,7 @@ int main(){
         mData = true;
         //...set the employee RRN and no. of employees
         noOfEmp=-1;
-        file.open("eindex.txt",ios::in);
+        file.open("erecord.txt",ios::in);
         while(!file.eof()){
             file.getline(errn,99,'|');
             s="";
@@ -820,7 +896,7 @@ int main(){
             }
             stringstream rrn(s);
             rrn>>eRRN;
-            file.getline(errn,99,'#');
+            file.getline(errn,300,'\n');
             noOfEmp++;
         }
         if(noOfEmp!=0){
