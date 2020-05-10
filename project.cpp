@@ -562,9 +562,9 @@ void bank::manager(){
             }
             void managerDataDisplay(){        
                 file.open("minfo.txt",ios::in);
-                cout<<"\nMANAGER's DEAILS :"<<endl;
+                cout<<"\nMANAGER'S DEAILS :"<<endl;
                 file.getline(mname,99,'|');
-                cout<<"FULL NAME : "<<mname<<endl;
+                cout<<"\nFULL NAME : "<<mname<<endl;
                 file.getline(mname,99,'|');
                 cout<<"MANAGER-ID : "<<mname<<endl;
                 file.getline(mname,99,'|');
@@ -1166,7 +1166,7 @@ void bank::employee(){
         private:
             fstream file;
             int i, j, found;
-            char mChoice, buf[1000], ch, pwd,pwd1[14], pwd2[14],id[100],pwde[100],mname[100];
+            char mChoice, buf[1000], ch, currentLoggedInRRN[10], pwd,pwd1[14], pwd2[14],id[100],pwde[100],mname[100];
             string name,ID,email,pno,location,branchCode,ps;
             bank b;
             struct emp e[6];
@@ -1204,6 +1204,7 @@ void bank::employee(){
                         file.getline(mname,99,'|');
                         file.getline(pwde,99,'#');
                         if ((strcmp(ps.c_str(),pwde)==0)&&(strcmp(ID.c_str(),mname)==0)){
+                            strcpy(currentLoggedInRRN,id);
                             found=1;
                             break;
                         }
@@ -1246,6 +1247,7 @@ void bank::employee(){
                     system("clear");
                     switch(mChoice){
                         case '1':
+                            employeeDataDisplay();
                             cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
                             getch();
                             system("clear");
@@ -1287,6 +1289,35 @@ void bank::employee(){
                             return;
                     }
                 }
+            }
+            void employeeDataDisplay(){
+                
+                cout<<"\nEMPLOYEE'S DEAILS :"<<endl;   
+                file.open("erecord.txt",ios::in);
+                while(!file.eof()){
+                    file.getline(mname,99,'|');
+                    if(strcmp(currentLoggedInRRN,mname)){
+                        file.getline(mname,99,'|');
+                        cout<<"\nFULL NAME : "<<mname<<endl;
+                        file.getline(mname,99,'|');
+                        cout<<"EMPLOYEE-ID : "<<mname<<endl;
+                        file.getline(mname,99,'|');
+                        cout<<"EMAIL ADDRESS : "<<mname<<endl;
+                        file.getline(mname,99,'|');
+                        file.getline(mname,99,'|');
+                        cout<<"PHONE NO. : "<<mname<<endl;
+                        file.getline(mname,99,'|');
+                        cout<<"ADDED BY MANAGER-ID : "<<mname<<endl;
+                        file.getline(mname,99,'|');
+                        cout<<"LOCATION OF THE BANK : "<<mname<<endl;
+                        file.getline(mname,99,'!');
+                        cout<<"BRANCH CODE : "<<mname<<endl;
+                        break;
+                    }
+                    file.getline(buf,299,'\n');                
+                }
+                file.close();
+                return;
             }
     };
     employees e;
