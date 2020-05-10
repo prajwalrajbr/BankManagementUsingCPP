@@ -58,6 +58,7 @@ class bank{
         bool is_digits(const string &str);
 
         void manager();
+        void employee();
 };
 
 //The fastest way to check if the file exists.
@@ -131,12 +132,11 @@ void bank::manager(){
                         }
                         ps=b.hash(ps);
                         if ((strcmp(ps.c_str(),pwde)==0)&&(strcmp(ID.c_str(),id)==0)){
-                            cout<<"\nSUCCESSFULLY LOGGED-IN"<<endl;
                             break;
                         }else{
                             cout<<"\nTHE ENTERED USERNAME OR PASSWORD IS INCORRECT"<<endl;
                             if(j==2){
-                                cout<<"TOO MANY ATTEMPTS";
+                                cout<<"TOO MANY ATTEMPTS\n";
                                 exit(1);
                             }
                         }
@@ -1161,6 +1161,139 @@ void bank::manager(){
     return;
 }
 
+void bank::employee(){
+    class employees{
+        private:
+            fstream file;
+            int i, j, found;
+            char mChoice, buf[1000], ch, pwd,pwd1[14], pwd2[14],id[100],pwde[100],mname[100];
+            string name,ID,email,pno,location,branchCode,ps;
+            bank b;
+            struct emp e[6];
+            unsigned int sort[6];
+        public:
+            void employeeDashBoard(){
+                system("clear");
+                j=0;
+                found=0;
+                while(true){
+                    cout<<"\nENTER THE EMPLOYEE ID : ";
+                    cin>>ID;
+                    cout<<"ENTER THE PASSWORD : ";
+                    getch();
+                    strcpy(pwd1,"");
+                    i = 0;
+                    while(true){
+                        pwd = getch();
+                        if (pwd=='\n'){
+                            break;
+                        }
+                        cout<<"*";
+                        ps=pwd;
+                        strcat(pwd1,ps.c_str());
+                        i++;
+                    }                        
+                    ps="";
+                    for(i=0;i<strlen(pwd1);i++){
+                        ps = ps+pwd1[i];
+                    }
+                    ps=b.hash(ps);
+                    file.open("eindex.txt",ios::in);
+                    while(!file.eof()){                        
+                        file.getline(id,99,'|');
+                        file.getline(mname,99,'|');
+                        file.getline(pwde,99,'#');
+                        if ((strcmp(ps.c_str(),pwde)==0)&&(strcmp(ID.c_str(),mname)==0)){
+                            found=1;
+                            break;
+                        }
+                    }
+                    file.close();
+                    if(found == 0){
+                        cout<<"\nTHE ENTERED USERNAME OR PASSWORD IS INCORRECT"<<endl;
+                        if(j==2){
+                            cout<<"TOO MANY ATTEMPTS\n";
+                            exit(1);
+                        }
+                    }else{
+                        system("clear");
+                        file.open("erecord.txt",ios::in);
+                        while(!file.eof()){
+                            file.getline(mname,99,'|');
+                            if(strcmp(id,mname)==0){
+                                file.getline(mname,99,'|');
+                                break;
+                            }
+                            file.getline(buf,300,'\n');
+                        }
+                        file.close();
+                        cout<<"WELCOME "<<mname<<endl;
+                        break;
+                    }
+                    j++;
+                }while(true){
+                    cout<<"\n------BANK OF MIT------"<<endl;
+                    cout<<"1: VIEW PROFILE"<<endl;
+                    cout<<"2: UPDATE PROFILE"<<endl;
+                    cout<<"3: ADD EMPLOYEE"<<endl;
+                    cout<<"4: UDATE EMPLOYEE DATA"<<endl;
+                    cout<<"5: VIEW ALL EMPLOYEES"<<endl;
+                    cout<<"6: SEARCH EMPLOYEE"<<endl;
+                    cout<<"7: REMOVE EMPLOYEE"<<endl;
+                    cout<<"8: VIEW TRANSACTIONS"<<endl;
+                    cout<<"9: LOG-OUT"<<endl;
+                    mChoice = getch();
+                    system("clear");
+                    switch(mChoice){
+                        case '1':
+                            cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                            getch();
+                            system("clear");
+                            break;
+                        case '2':
+                            break;
+                        case '3':
+                            cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                            getch();
+                            system("clear");
+                            break;
+                        case '4':
+                            cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                            getch();
+                            getch();
+                            system("clear");
+                            break;
+                        case '5':
+                            cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                            getch();
+                            system("clear");
+                            break;
+                        case '6':
+                            cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                            getch();
+                            getch();
+                            system("clear");
+                            break;
+                        case '7':
+                            cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                            getch();
+                            getch();
+                            system("clear");
+                            break;
+                        case '8':
+                            break;
+                        default :
+                            cout<<"SUCCESSFULLY LOGGED-OUT"<<endl; 
+                            return;
+                    }
+                }
+            }
+    };
+    employees e;
+    e.employeeDashBoard();
+    return;
+}
+
 
 //Exexcution starts from here.
 int main(){
@@ -1205,14 +1338,17 @@ int main(){
         file.close();
         file.open("erecord.txt",ios::out);
         file.close();
+        file.open("ahindex.txt",ios::out);
+        file.close();
+        file.open("ahrecord.txt",ios::out);
+        file.close();
         cout<<"ENTER THE DETAILS FOR THE MANAGER ACCOUNT"<<endl;
         b.manager();
     }
     char choice;
     for(;;){
 
-        cout<<"------BANK OF MIT------"<<endl;
-        cout<<"\nSELECT THE LOG-IN TYPE:"<<endl;
+        cout<<"\n------BANK OF MIT------"<<endl;
         cout<<"1: BANK MANAGER LOG-IN"<<endl;
         cout<<"2: EMPLOYEE LOG-IN"<<endl;
         cout<<"3: ACCOUNT HOLDER LOG-IN"<<endl;
@@ -1225,7 +1361,7 @@ int main(){
                 break;
             
             case '2':
-                cout<<"1"<<endl;
+                b.employee();
                 break;
             
             case '3':
