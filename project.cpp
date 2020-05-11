@@ -1253,6 +1253,10 @@ void bank::employee(){
                             system("clear");
                             break;
                         case '2':
+                            employeeDataUpdate();
+                            cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                            getch();
+                            system("clear");
                             break;
                         case '3':
                             cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
@@ -1290,13 +1294,12 @@ void bank::employee(){
                     }
                 }
             }
-            void employeeDataDisplay(){
-                
+            void employeeDataDisplay(){                
                 cout<<"\nEMPLOYEE'S DEAILS :"<<endl;   
                 file.open("erecord.txt",ios::in);
                 while(!file.eof()){
                     file.getline(mname,99,'|');
-                    if(strcmp(currentLoggedInRRN,mname)){
+                    if(strcmp(currentLoggedInRRN,mname)==0){
                         file.getline(mname,99,'|');
                         cout<<"\nFULL NAME : "<<mname<<endl;
                         file.getline(mname,99,'|');
@@ -1315,6 +1318,186 @@ void bank::employee(){
                         break;
                     }
                     file.getline(buf,299,'\n');                
+                }
+                file.close();
+                return;
+            }
+            void employeeDataUpdate(){
+                file.open("erecord.txt",ios::in);
+                i=0;
+                while(!file.eof()){
+                    file.getline(e[i].rrn,99,'|');
+                    file.getline(e[i].name,99,'|');
+                    file.getline(e[i].EID,99,'|');
+                    file.getline(e[i].email,99,'|');
+                    file.getline(e[i].pwd,99,'|');
+                    file.getline(e[i].pno,99,'|');
+                    file.getline(e[i].addedBy,99,'|');
+                    file.getline(e[i].location,99,'|');
+                    file.getline(e[i].branchCode,99,'!');    
+                    file.getline(buf,299,'\n');  
+                    i++;
+                }
+                file.close();
+
+                while(true){            
+                    cout<<"\nENTER THE UPDATED NAME OF THE EMPLOYEE:"<<endl;
+                    getline(cin,name);
+                    if(strlen(name.c_str())<1){
+                    }else{
+                        break;
+                    }
+                }
+
+                cout<<"ENTER THE UPDATED EMAIL-ID:"<<endl;
+                while(true){
+                    cin>>email;
+                    for(i=0;i<strlen(email.c_str());i++){
+                        if (email[i]=='@'){
+                            for(j=i;j<strlen(email.c_str());j++){
+                                if (email[j]=='.'){
+                                    j=0;
+                                    break;
+                                }
+                            }
+                            if (j==0){
+                                i=0;
+                                break;
+                            }
+                        }
+                    }
+                    if (i==0 && j==0){
+                        break;
+                    }
+                    cout<<"ENTER A VALID EMAIL-ID"<<endl;
+                }
+
+                cout<<"ENTER THE NEW PASSWORD HAVING 8 TO 14 CHARACTERS:"<<endl;               
+                getch();
+
+                startpwd7:
+                strcpy(pwd1,"");
+                i = 0;
+                while(true){
+                        pwd = getch();
+                        if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
+                            if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                            }else{
+                                cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                                goto startpwd7;
+                            }
+                        }
+                        if (pwd=='\n'){
+                            if (i>7 && i<15){
+                                break;
+                            }else{
+                                cout<<"\nTHE PASSWORD MUST BE 8 TO 14 CHARACTERS!!!"<<endl;
+                                goto startpwd7;
+                            }
+                        }
+                        cout<<"*";
+                        ps=pwd;
+                        strcat(pwd1,ps.c_str());
+                        i++;
+                }
+                cout<<"\nENTER THE PASSWORD AGAIN"<<endl;
+                startpwd8:
+                strcpy(pwd2,"");
+                i = 0;
+                while(true){
+                        pwd = getch();
+                        if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
+                            if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                            }else{
+                                cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                                goto startpwd8;
+                            }
+                        }
+                        if (pwd=='\n'){
+                            if (i>7 && i<15){
+                                break;
+                            }else{
+                                cout<<"\nTHE PASSWORD MUST BE 8 TO 14 CHARACTERS!!!"<<endl;
+                                goto startpwd8;
+                            }
+                        }
+                        cout<<"*";
+                        ps=pwd;
+                        strcat(pwd2,ps.c_str());
+                        i++;
+                }
+                if ((strcmp(pwd1,pwd2))!=0){
+                    cout<<"PASSWORDS DOESN'T MATCH, ENTER THE PASSWORDS AGAIN"<<endl;
+                    goto startpwd7;
+                }
+                ps="";
+                for(i=0;i<strlen(pwd1);i++){
+                    ps = ps+pwd1[i];
+                }
+                ps = b.hash(ps);
+
+                file.open("eindex.txt",ios::out);
+                for(i=0;i<noOfEmp;i++){
+                    if(strcmp(currentLoggedInRRN,e[i].rrn)==0){
+                        file<<e[i].rrn<<"|"<<e[i].EID<<"|"<<ps<<"#";
+                        continue;
+                    }
+                    file<<e[i].rrn<<"|"<<e[i].EID<<"|"<<e[i].pwd<<"#";
+                }
+                file.close();
+                file.open("erecord.txt",ios::out);
+                for(i=0;i<noOfEmp;i++){    
+                    if(strcmp(currentLoggedInRRN,e[i].rrn)==0){       
+                        strcpy(buf,e[i].rrn);
+                        strcat(buf,"|");
+                        strcat(buf,name.c_str());
+                        strcat(buf,"|");
+                        strcat(buf,e[i].EID);
+                        strcat(buf,"|");
+                        strcat(buf,email.c_str());
+                        strcat(buf,"|");
+                        strcat(buf,ps.c_str());
+                        strcat(buf,"|");
+                        strcat(buf,e[i].pno);
+                        strcat(buf,"|");
+                        strcat(buf,e[i].addedBy);
+                        strcat(buf,"|");
+                        strcat(buf,e[i].location);
+                        strcat(buf,"|");
+                        strcat(buf,e[i].branchCode);
+                        strcat(buf,"!");
+                        while(strlen(buf)<200){
+                            strcat(buf,"!");
+                        }
+                        strcat(buf,"\n");
+                        file<<buf;    
+                        system("clear");
+                        cout<<"DETAILS SUCCESSFULLY UPDATED"<<endl;
+                        continue;
+                    }        
+                    strcpy(buf,e[i].rrn);
+                    strcat(buf,"|");
+                    strcat(buf,e[i].name);
+                    strcat(buf,"|");
+                    strcat(buf,e[i].EID);
+                    strcat(buf,"|");
+                    strcat(buf,e[i].email);
+                    strcat(buf,"|");
+                    strcat(buf,e[i].pwd);
+                    strcat(buf,"|");
+                    strcat(buf,e[i].pno);
+                    strcat(buf,"|");
+                    strcat(buf,e[i].addedBy);
+                    strcat(buf,"|");
+                    strcat(buf,e[i].location);
+                    strcat(buf,"|");
+                    strcat(buf,e[i].branchCode);
+                    strcat(buf,"!");
+                    while(strlen(buf)<200){
+                        strcat(buf,"!");
+                    }
+                    strcat(buf,"\n");
+                    file<<buf;
                 }
                 file.close();
                 return;
