@@ -1135,8 +1135,8 @@ void bank::manager(){
                         i++;
                 }
                 file.close(); 
-
-                cout<<"RRN"<<" |"<<"EID"<<"      |"<<"EMPLOYEE NAME"<<endl;
+                cout<<"TOTAL NO. OF EMPLOYEES: "<<noOfEmp<<endl;
+                cout<<"\nRRN"<<" |"<<"EID"<<"      |"<<"EMPLOYEE NAME"<<endl;
                 for(i=0;i<noOfEmp;i++){
                     for(j=0;j<noOfEmp;j++){
                         if(strcmp(e[j].EID,to_string(sort[i]).c_str())==0){
@@ -1594,7 +1594,7 @@ void bank::employee(){
    
                 getch();
                 while(true){
-                    cout<<"ENTER THE ADDRESS OF THE CUSTOMER"<<endl;
+                    cout<<"ENTER THE ADDRESS OF THE CUSTOMER:"<<endl;
                     getline(cin,location);
                     if(strlen(location.c_str())<1){
                     }else{
@@ -1629,7 +1629,7 @@ void bank::employee(){
                 strcat(buf,email.c_str());
                 strcat(buf,"|");
                     
-                cout<<"ENTER THE 10-DIGIT PHONE NUMBER OF THE EMPLOYEE:"<<endl;
+                cout<<"ENTER THE 10-DIGIT PHONE NUMBER OF THE CUSTOMER:"<<endl;
                 for(;;){
                     cin>>pno;
                     if(b.is_digits(pno)){
@@ -1767,9 +1767,39 @@ void bank::employee(){
                 }
                 file.close();
 
+                if(noOfCus>0){
+                    indexNo=0;
+                    file.open("ahindex.txt",ios::in);
+                    for(j=0;j<noOfCus;j++){
+                        for(i=0;i<4;i++){
+                            file.getline(id,99,'|');
+                        }
+                            file.getline(mname,99,'\n');
+                    }
+                    j=0;
+                    stringstream leng(mname);
+                    leng>>j;
+                    indexNo+=j;
+                    file.close();
+
+                    file.open("ahrecord.txt",ios::in);
+                    for(j=0;j<noOfCus;j++){
+                        file.getline(mname,99,'|');
+                        for(i=0;i<14;i++){
+                            file.getline(id,99,'|');
+                        }
+                            file.getline(id,99,'\n');
+                    }
+                    j=0;
+                    stringstream len(mname);
+                    len>>j;
+                    indexNo+=j;
+                    indexNo++;
+                    file.close();
+                }
+                    
                 file.open("ahindex.txt",ios::app);
                 file<<cRRN<<"|"<<name<<"|"<<ID<<"|"<<ps<<"|"<<indexNo<<"\n";
-                indexNo+=(strlen(buf)+3);
                 file.close();
 
                 cRRN++;
@@ -1790,8 +1820,8 @@ void bank::employee(){
 int main(){
     bank b;
     fstream file;
-    char errn[1000],ps[100];
-    int i;
+    char errn[1000],lengthIndicator[4],ps[100];
+    int i, length;
     string s;
 
     
@@ -1818,6 +1848,29 @@ int main(){
         if(noOfEmp!=0){
             eRRN++;
         }
+        file.close();
+        
+        file.open("ahrecord.txt",ios::in);
+        while(!file.eof()){
+            file.getline(lengthIndicator,99,'|');
+            file.getline(errn,99,'|');
+            s="";
+            for(i=0;i<strlen(errn);i++){
+                s+=errn[i];
+            }
+            stringstream crrn(s);
+            crrn>>cRRN;
+            file.getline(errn,999,'\n');
+            noOfCus++;
+        }
+        if(noOfCus!=0){
+            cRRN++;
+            noOfCus--;
+        }
+        if(noOfCus==0){
+            cRRN=0;
+        }
+        cout<<cRRN<<"|"<<noOfCus;
         file.close();
 
     }
