@@ -53,6 +53,10 @@ struct emp{
     char rrn[10], name[100], EID[10], email[100], pwd[50], pno[20], addedBy[10], location[100], branchCode[10], buf[300];
 };
 
+struct cus{
+    char leni[10], rrn[10], name[100], AcType[100], CID[20], AcNo[20], Address[1000], email[100], pwd[50], pno[20], Amt[100], dob[11], IFSC[20], addedBy[10],  location[100], branchCode[10];
+};
+
 class bank{
     private:
         char username[20], password[16];
@@ -1169,12 +1173,13 @@ void bank::employee(){
     class employees{
         private:
             fstream file;
-            int i, j, found, date, month, year, indexNo=0, k;
+            int i, j, found, date, month, year, indexNo=0, k, ptr;
             char mChoice, buf[1000], buffer[1000], ch, dob[10], currentLoggedInRRN[10], pwd,pwd1[14], pwd2[14],id[100],pwde[100],mname[100];
             string name,ID,email,pno,location,branchCode,ps,accNo, DOB[3], amt;
             bank b;
             struct emp e[6];
-            unsigned int sort[6];
+            struct cus c[100];
+            unsigned int sort[100];
         public:
             void employeeDashBoard(){
                 system("clear");
@@ -1283,7 +1288,6 @@ void bank::employee(){
                         case '6':
                             searchCustomerOrUpdateBalance();
                             cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
-                            getch();
                             getch();
                             system("clear");
                             break;
@@ -1796,7 +1800,6 @@ void bank::employee(){
                     stringstream len(mname);
                     len>>j;
                     indexNo+=j;
-                    indexNo++;
                     file.close();
                 }
                     
@@ -1842,25 +1845,39 @@ void bank::employee(){
                         file.getline(mname,99,'\n');
                     }
                 file.close();
-
+                system("clear");
                 if(found==0){
                     cout<<"CUSTOMER WITH NAME '"<<name<<"' NOT FOUND"<<endl;
+                    cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
+                    getch();
                     return;
                 } else if (found==1){
                     cout<<"CUSTOMER DETAILS : "<<endl;
+                    file.open("ahindex.txt",ios::in);
+                        for(j=0;j<noOfCus;j++){
+                            file.getline(mname,99,'|');        
+                            file.getline(mname,99,'|'); 
+                            if(strcmp(mname,name.c_str())==0){         
+                                file.getline(mname,99,'|');      
+                                file.getline(mname,99,'|'); 
+                                file.getline(mname,99,'\n'); 
+                                break;
+                            }       
+                            file.getline(buf,999,'\n'); 
+                        }       
+                    file.close();
                     file.open("ahrecord.txt",ios::in);
-                    while(!file.eof()){                   
+                        file.seekg(atoi(mname),ios::beg);            
                         file.getline(mname,99,'|');  
                         file.getline(buf,99,'|');      
                         file.getline(mname,99,'|');
-                        if(strcmp(mname,name.c_str())==0){
                             cout<<"CUSTOMER NAME : "<<mname<<endl; 
                             file.getline(buf,99,'|');
                             cout<<"ACCOUNT TYPE : "<<buf<<endl;
                             file.getline(buf,99,'|');
                             cout<<"CIF NUMBER : "<<buf<<endl;                       
-                            file.getline(buf,99,'|');
-                            cout<<"ACCOUNT NUMBER : "<<buf<<endl;                        
+                            file.getline(id,99,'|');
+                            cout<<"ACCOUNT NUMBER : "<<id<<endl;                        
                             file.getline(buf,999,'|');
                             cout<<"EMPLOYEE ADDRESS : "<<buf<<endl;                      
                             file.getline(buf,99,'|');
@@ -1881,14 +1898,9 @@ void bank::employee(){
                             cout<<"BRANCH CODE : "<<buf<<endl;
                             cout<<"\nACCOUNT BALANCE : "<<mname<<endl;
                             file.close();
-                            return;
-                        }
-                        file.getline(buf,999,'\n');
-                    }
                     file.close();
-                    return;
                 } else{
-                    cout<<"SELECT THE ACCOUNT NO"<<endl;
+                    cout<<"SELECT THE ACCOUNT NO\n"<<endl;
                     file.open("ahindex.txt",ios::in);
                     i=0;
                     for(j=0;j<noOfCus;j++){
@@ -1917,23 +1929,24 @@ void bank::employee(){
                             file.getline(mname,99,'|');
                             if(k==i){
                                 strcpy(id,mname);
+                                file.getline(mname,99,'|');
+                                file.getline(mname,99,'\n');
                                 break;
                             }
                         }
-                        file.getline(mname,99,'\n');
+                        file.getline(buf,999,'\n');
                     }
                     file.close();
                     
-                    cout<<"CUSTOMER DETAILS : "<<endl;
+                    cout<<"\nCUSTOMER DETAILS : "<<endl;
                     file.open("ahrecord.txt",ios::in);
-                    while(!file.eof()){                   
+                        file.seekg(atoi(mname),ios::beg);
                         file.getline(mname,99,'|');  
                         file.getline(mname,99,'|');      
                         file.getline(buf,99,'|');
                         file.getline(buffer,99,'|');
                         file.getline(pwd1,99,'|');
                         file.getline(mname,99,'|');
-                        if(strcmp(mname,id)==0){
                             cout<<"CUSTOMER NAME : "<<buf<<endl;
                             cout<<"ACCOUNT TYPE : "<<buffer<<endl;
                             cout<<"CIF NUMBER : "<<pwd1<<endl; 
@@ -1957,12 +1970,86 @@ void bank::employee(){
                             file.getline(buf,99,'\n');
                             cout<<"BRANCH CODE : "<<buf<<endl;
                             cout<<"\nACCOUNT BALANCE : "<<mname<<endl;
-                            file.close();
-                            return;
-                        }
                         file.getline(buf,999,'\n');
-                    }
                     file.close();                    
+                }
+
+                if(found>0){
+                    cout<<"\nSELECT ANY OPTION :"<<endl;
+                    cout<<"\n1. ADD AMOUNT TO THE ACCOUNT BALANCE"<<endl;
+                    cout<<"2. DEDUCT AMOUNT FROM THE ACCOUNT BALANCE"<<endl;
+                    cout<<"3. RETURN TO MAIN MENU......"<<endl;
+                    mChoice = getch();
+                    if(mChoice == '1' || mChoice == '2'){
+                        file.open("ahindex.txt",ios::in);
+                        for(j=0;j<noOfCus;j++){
+                            file.getline(mname,99,'|');        
+                            file.getline(mname,99,'|');        
+                            file.getline(mname,99,'|'); 
+                            if(strcmp(mname,id)==0){       
+                                file.getline(mname,99,'|'); 
+                                file.getline(mname,99,'\n'); 
+                                break;
+                            }       
+                            file.getline(buf,999,'\n'); 
+                        }       
+                        file.close();
+
+                        if(mChoice == '1'){
+                            cout<<"ENTER THE AMOUNT TO BE ADDED : ";
+                            cin>>k;
+                        }else{
+                            cout<<"ENTER THE AMOUNT TO BE DEDUCTED : ";
+                            cin>>k;
+                        }
+      
+
+                        file.open("ahrecord.txt",ios::in);
+                        i=0;
+                        for (j=0;j<noOfCus;j++){
+                            file.getline(c[i].leni,99,'|');
+                            file.getline(c[i].rrn,99,'|');
+                            file.getline(c[i].name,99,'|');
+                            file.getline(c[i].AcType,99,'|');
+                            file.getline(c[i].CID,99,'|');
+                            file.getline(c[i].AcNo,99,'|');
+                            file.getline(c[i].Address,999,'|');
+                            file.getline(c[i].email,99,'|');
+                            file.getline(c[i].pno,99,'|');
+                            file.getline(c[i].Amt,99,'|');
+                            file.getline(c[i].pwd,99,'|');
+                            file.getline(c[i].dob,11,'|');
+                            file.getline(c[i].IFSC,12,'|');
+                            file.getline(c[i].addedBy,9,'|');
+                            file.getline(c[i].location,99,'|');
+                            file.getline(c[i].branchCode,99,'\n');
+                            i++;
+                        }
+                        file.close();
+
+                        file.open("ahrecord.txt",ios::out);
+                        for (j=0;j<noOfCus;j++){
+                            file<<c[j].leni<<"|"<<c[j].rrn<<"|"<<c[j].name<<"|"<<c[j].AcType<<"|"<<c[j].CID<<"|"<<c[j].AcNo<<"|"<<c[j].Address<<"|"<<c[j].email<<"|"<<c[j].pno<<"|";
+                            if(strcmp(c[j].AcNo,id)==0){
+                                if(mChoice == '1'){
+                                    k+=atoi(c[j].Amt);
+                                    getch();
+                                }else{
+                                    k=atoi(c[j].Amt)-k;
+                                    getch();
+                                }
+                                file<<k<<"|";
+                                system("clear");
+                                cout<<"UPDATED BALANCE IS : "<<k<<endl;
+                            }else{
+                                file<<c[j].Amt<<"|";
+                            }
+                            file<<c[j].pwd<<"|"<<c[j].dob<<"|"<<c[j].IFSC<<"|"<<c[j].addedBy<<"|"<<c[j].location<<"|"<<c[j].branchCode<<"\n";
+                        }
+                        file.close();
+                    }else{
+                        return;
+                    }
                 }
             }
     };
