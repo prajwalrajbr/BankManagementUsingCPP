@@ -1816,7 +1816,7 @@ void bank::employee(){
             }
             void viewAllCustomers(){   
                 cout<<"TOTAL NO. OF CUSTOMERS: "<<noOfCus<<endl;
-                cout<<"\nRRN"<<" |"<<"CIF No."<<"    |"<<"CUSTOMER NAME"<<endl;
+                cout<<"\nRRN"<<" |"<<" ACCOUNT No."<<" | "<<"CUSTOMER NAME"<<endl;
                 file.open("ahrecord.txt",ios::in);
                 for (j=0;j<noOfCus;j++){
                     file.getline(mname,99,'|');
@@ -1825,8 +1825,9 @@ void bank::employee(){
                     file.getline(id,99,'|');
                     file.getline(mname,99,'|');
                     file.getline(mname,99,'|');
-                    cout<<mname<<"|";
-                    cout<<id<<endl;
+                    file.getline(mname,99,'|');
+                    cout<<" "<<mname<<" |";
+                    cout<<" "<<id<<endl;
                     file.getline(buf,999,'\n');
                 }
                 file.close();
