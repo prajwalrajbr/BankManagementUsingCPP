@@ -1249,7 +1249,7 @@ void bank::employee(){
                     cout<<"4: UDATE CUSTOMER ACCOUNT"<<endl;
                     cout<<"5: VIEW ALL CUSTOMERS"<<endl;
                     cout<<"6: SEARCH CUSTOMER OR UPDATE BALANCE"<<endl;
-                    cout<<"7: REMOVE CUSTOMER"<<endl;
+                    cout<<"7: REMOVE CUSTOMER ACCOUNT"<<endl;
                     cout<<"8: VIEW TRANSACTIONS"<<endl;
                     cout<<"9: LOG-OUT"<<endl;
                     mChoice = getch();
@@ -1274,6 +1274,9 @@ void bank::employee(){
                             system("clear");
                             break;
                         case '4':
+                            updateCustomerAccount();
+                            system("clear");
+                            cout<<"DETAILS SUCCESSFULLY UPDATED"<<endl;
                             cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
                             getch();
                             getch();
@@ -1849,8 +1852,6 @@ void bank::employee(){
                 system("clear");
                 if(found==0){
                     cout<<"CUSTOMER WITH NAME '"<<name<<"' NOT FOUND"<<endl;
-                    cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
-                    getch();
                     return;
                 } else if (found==1){
                     cout<<"CUSTOMER DETAILS : "<<endl;
@@ -2030,7 +2031,6 @@ void bank::employee(){
 
                         file.open("ahrecord.txt",ios::out);
                         for (j=0;j<noOfCus;j++){
-                            file<<c[j].leni<<"|"<<c[j].rrn<<"|"<<c[j].name<<"|"<<c[j].AcType<<"|"<<c[j].CID<<"|"<<c[j].AcNo<<"|"<<c[j].Address<<"|"<<c[j].email<<"|"<<c[j].pno<<"|";
                             if(strcmp(c[j].AcNo,id)==0){
                                 if(mChoice == '1'){
                                     k+=atoi(c[j].Amt);
@@ -2039,19 +2039,497 @@ void bank::employee(){
                                     k=atoi(c[j].Amt)-k;
                                     getch();
                                 }
+                                ptr=atoi(c[j].leni);
+                                ptr-=strlen(c[j].Amt);
+                                stringstream ln;
+                                ln<<k;
+                                ptr+=strlen(ln.str().c_str());
+                                file<<ptr<<"|"<<c[j].rrn<<"|"<<c[j].name<<"|"<<c[j].AcType<<"|"<<c[j].CID<<"|"<<c[j].AcNo<<"|"<<c[j].Address<<"|"<<c[j].email<<"|"<<c[j].pno<<"|";
                                 file<<k<<"|";
                                 system("clear");
                                 cout<<"UPDATED BALANCE IS : "<<k<<endl;
                             }else{
+                                file<<c[j].leni<<"|"<<c[j].rrn<<"|"<<c[j].name<<"|"<<c[j].AcType<<"|"<<c[j].CID<<"|"<<c[j].AcNo<<"|"<<c[j].Address<<"|"<<c[j].email<<"|"<<c[j].pno<<"|";
                                 file<<c[j].Amt<<"|";
                             }
                             file<<c[j].pwd<<"|"<<c[j].dob<<"|"<<c[j].IFSC<<"|"<<c[j].addedBy<<"|"<<c[j].location<<"|"<<c[j].branchCode<<"\n";
                         }
                         file.close();
+
+                        file.open("ahrecord.txt",ios::in);
+                        i=0;
+                        for (j=0;j<noOfCus;j++){
+                            file.getline(c[i].leni,99,'|');
+                            file.getline(c[i].rrn,99,'|');
+                            file.getline(c[i].name,99,'|');
+                            file.getline(c[i].AcType,99,'|');
+                            file.getline(c[i].CID,99,'|');
+                            file.getline(c[i].AcNo,99,'|');
+                            file.getline(c[i].Address,999,'|');
+                            file.getline(c[i].email,99,'|');
+                            file.getline(c[i].pno,99,'|');
+                            file.getline(c[i].Amt,99,'|');
+                            file.getline(c[i].pwd,99,'|');
+                            file.getline(c[i].dob,11,'|');
+                            file.getline(c[i].IFSC,12,'|');
+                            file.getline(c[i].addedBy,9,'|');
+                            file.getline(c[i].location,99,'|');
+                            file.getline(c[i].branchCode,99,'\n');
+                            i++;
+                        }
+                        file.close();
+
+                        file.open("ahindex.txt",ios::out);
+                            for(j=0;j<noOfCus;j++){
+                                k=0;
+                                for(i=0;i<j;i++){
+                                    k+=atoi(c[i].leni);
+                                }
+                                file<<c[j].rrn<<"|"<<c[j].name<<"|"<<c[j].AcNo<<"|"<<c[j].pwd<<"|"<<k<<"\n";
+                            }
+                        file.close();
                     }else{
                         return;
                     }
                 }
+            }
+            void updateCustomerAccount(){
+                cout<<"ENTER THE NAME OF THE CUSTOMER TO BE UPDATED :";
+                getline(cin,name);
+                found=0;
+                file.open("ahindex.txt",ios::in);
+                    for(j=0;j<noOfCus;j++){
+                        file.getline(mname,99,'|');
+                        file.getline(mname,99,'|');
+                        if(strcmp(name.c_str(),mname)==0){
+                            found++;
+                        }
+                        file.getline(mname,99,'\n');
+                    }
+                file.close();
+                system("clear");
+                if(found==0){
+                    cout<<"CUSTOMER WITH NAME '"<<name<<"' NOT FOUND"<<endl;
+                    return;
+                } else if (found==1){
+                    cout<<"CUSTOMER DETAILS : "<<endl;
+                    file.open("ahindex.txt",ios::in);
+                        for(j=0;j<noOfCus;j++){
+                            file.getline(mname,99,'|');        
+                            file.getline(mname,99,'|'); 
+                            if(strcmp(mname,name.c_str())==0){         
+                                file.getline(id,99,'|');      
+                                file.getline(mname,99,'|'); 
+                                file.getline(mname,99,'\n'); 
+                                break;
+                            }       
+                            file.getline(buf,999,'\n'); 
+                        }       
+                    file.close();
+                } else{
+                    cout<<"SELECT THE ACCOUNT NO\n"<<endl;
+                    file.open("ahindex.txt",ios::in);
+                    i=0;
+                    for(j=0;j<noOfCus;j++){
+                        file.getline(mname,99,'|');
+                        file.getline(mname,99,'|');
+                        if(strcmp(name.c_str(),mname)==0){
+                            file.getline(mname,99,'|');
+                            i++;
+                            cout<<i<<": "<<mname<<endl;
+                        }
+                        file.getline(mname,99,'\n');
+                    }
+                    file.close();
+                    pwd = getch();
+                    dob[0] = pwd;
+                    dob[1] = ';';
+                    i = atoi(dob);
+
+                    file.open("ahindex.txt",ios::in); 
+                    k=0;
+                    for(j=0;j<noOfCus;j++){
+                        file.getline(mname,99,'|');
+                        file.getline(mname,99,'|');
+                        if(strcmp(name.c_str(),mname)==0){
+                            k++;
+                            file.getline(mname,99,'|');
+                            if(k==i){
+                                strcpy(id,mname);
+                                file.getline(mname,99,'|');
+                                file.getline(mname,99,'\n');
+                                break;
+                            }
+                        }
+                        file.getline(buf,999,'\n');
+                    }
+                    file.close();
+                                      
+                }
+
+                file.open("ahrecord.txt",ios::in);
+                    i=0;
+                    for (j=0;j<noOfCus;j++){
+                        file.getline(c[i].leni,99,'|');
+                        file.getline(c[i].rrn,99,'|');
+                        file.getline(c[i].name,99,'|');
+                        file.getline(c[i].AcType,99,'|');
+                        file.getline(c[i].CID,99,'|');
+                        file.getline(c[i].AcNo,99,'|');
+                        file.getline(c[i].Address,999,'|');
+                        file.getline(c[i].email,99,'|');
+                        file.getline(c[i].pno,99,'|');
+                        file.getline(c[i].Amt,99,'|');
+                        file.getline(c[i].pwd,99,'|');
+                        file.getline(c[i].dob,11,'|');
+                        file.getline(c[i].IFSC,12,'|');
+                        file.getline(c[i].addedBy,9,'|');
+                        file.getline(c[i].location,99,'|');
+                        file.getline(c[i].branchCode,99,'\n');
+                        i++;
+                    }
+                file.close();
+                
+                for (ptr=0;ptr<noOfCus;ptr++){
+                    if(strcmp(c[ptr].AcNo,id)==0){
+                        strcpy(buf,"");
+                        strcat(buf,c[ptr].rrn);
+                        strcat(buf,"|");
+                        while(true){            
+                            cout<<"\nENTER THE UPDATED NAME OF THE CUSTOMER :"<<endl;
+                            getline(cin,name);
+                            if(strlen(name.c_str())<1){
+                            }else{
+                                break;
+                            }
+                        }
+                        strcat(buf,name.c_str());
+                        strcat(buf,"|");
+
+                        for(;;){
+                            cout<<"SELECT THE ACCOUNT TYPE :"<<endl;
+                            cout<<"1. SAVINGS ACCOUNT"<<endl;
+                            cout<<"2. CURRENT ACCOUNT"<<endl;
+                            cout<<"3. RECURRING DEPOSIT ACCOUNT"<<endl;
+                            cout<<"4. FIXED DEPOSIT ACCOUNT"<<endl;
+                            cout<<"5. DEMAT ACCOUNT"<<endl;
+                            cout<<"6. NRI ACCOUNT"<<endl;
+                            ch = getch();
+                            if (ch=='1'){
+                                cout<<"\nSELECTED : SAVINGS ACCOUNT\n"<<endl;
+                                strcat(buf,"SAVINGS ACCOUNT");
+                                break;
+                            }
+                            else if (ch=='2'){
+                                cout<<"\nSELECTED : CURRENT ACCOUNT\n"<<endl;
+                                strcat(buf,"CURRENT ACCOUNT");
+                                break;
+                            }
+                            else if (ch=='3'){
+                                cout<<"\nSELECTED : RECURRING DEPOSIT ACCOUNT\n"<<endl;
+                                strcat(buf,"RECURRING DEPOSIT ACCOUNT");
+                                break;
+                            }
+                            else if (ch=='4'){
+                                cout<<"\nSELECTED : FIXED DEPOSIT ACCOUNT\n"<<endl;
+                                strcat(buf,"FIXED DEPOSIT ACCOUNT");
+                                break;
+                            }
+                            else if (ch=='5'){
+                                cout<<"\nSELECTED : DEMAT ACCOUNT\n"<<endl;
+                                strcat(buf,"DEMAT ACCOUNT");
+                                break;
+                            }
+                            else if (ch=='6'){
+                                cout<<"\nSELECTED : NRI ACCOUNT\n"<<endl;
+                                strcat(buf,"NRI ACCOUNT");
+                                break;
+                            }
+                            else {
+                                cout<<"SELECT THE CHOICE CORRECTLY"<<endl;
+                            }
+                        }
+                        strcat(buf,"|");
+
+                        cout<<"ENTER THE NEW 11-DIGIT CIF NUMBER:"<<endl;
+                        for(;;){
+                            cin>>ID;
+                            if(b.is_digits(ID)){
+                                if(strlen(ID.c_str())==11){
+                                    break;
+                                }else{
+                                    cout<<"THE CIF NUMBER MUST BE 11 DIGITS!!!"<<endl;
+                                }
+                            }else{
+                                cout<<"THE CIF NUMBER MUST CONTAIN ONLY NUMERICAL DIGITS!!!"<<endl;
+                            }
+                        }
+                        strcat(buf,ID.c_str());
+                        strcat(buf,"|");
+                        strcat(buf,c[ptr].AcNo);
+                        strcat(buf,"|");
+                        getch();
+                        while(true){
+                            cout<<"ENTER THE UPDATED ADDRESS OF THE CUSTOMER:"<<endl;
+                            getline(cin,location);
+                            if(strlen(location.c_str())<1){
+                            }else{
+                                break;
+                            }
+                        }
+                        strcat(buf,location.c_str());
+                        strcat(buf,"|");
+
+
+                        cout<<"ENTER THE UPDATED EMAIL-ID OF THE CUSTOMER :"<<endl;
+                        while(true){
+                            cin>>email;
+                            for(i=0;i<strlen(email.c_str());i++){
+                                if (email[i]=='@'){
+                                    for(j=i;j<strlen(email.c_str());j++){
+                                        if (email[j]=='.'){
+                                            j=0;
+                                            break;
+                                        }
+                                    }
+                                    if (j==0){
+                                        i=0;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (i==0 && j==0){
+                                break;
+                            }
+                            cout<<"ENTER A VALID EMAIL-ID"<<endl;
+                        }
+                        strcat(buf,email.c_str());
+                        strcat(buf,"|");
+
+
+                        cout<<"ENTER THE NEW PASSWORD HAVING 8 TO 14 CHARACTERS:"<<endl;               
+                        getch();
+
+                        startpwd11:
+                        strcpy(pwd1,"");
+                        i = 0;
+                        while(true){
+                                pwd = getch();
+                                if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
+                                    if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                                    }else{
+                                        cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                                        goto startpwd11;
+                                    }
+                                }
+                                if (pwd=='\n'){
+                                    if (i>7 && i<15){
+                                        break;
+                                    }else{
+                                        cout<<"\nTHE PASSWORD MUST BE 8 TO 14 CHARACTERS!!!"<<endl;
+                                        goto startpwd11;
+                                    }
+                                }
+                                cout<<"*";
+                                ps=pwd;
+                                strcat(pwd1,ps.c_str());
+                                i++;
+                        }
+                        cout<<"\nENTER THE PASSWORD AGAIN"<<endl;
+                        startpwd12:
+                        strcpy(pwd2,"");
+                        i = 0;
+                        while(true){
+                                pwd = getch();
+                                if (pwd==' ' || pwd=='\t' || int(pwd)==127 || int(pwd)==65 || int(pwd)==66 || int(pwd)==67 || int(pwd)==68){
+                                    if(pwd=='A' ||pwd=='B' ||pwd=='C' ||pwd=='D' ){
+                                    }else{
+                                        cout<<"\nSPACES, TABS, BACKSPACESS AND ARROW KEYS ARE NOT ALLOWED, ENTER THE PASSWORD CORRECTLY!!!"<<endl;
+                                        goto startpwd12;
+                                    }
+                                }
+                                if (pwd=='\n'){
+                                    if (i>7 && i<15){
+                                        break;
+                                    }else{
+                                        cout<<"\nTHE PASSWORD MUST BE 8 TO 14 CHARACTERS!!!"<<endl;
+                                        goto startpwd12;
+                                    }
+                                }
+                                cout<<"*";
+                                ps=pwd;
+                                strcat(pwd2,ps.c_str());
+                                i++;
+                        }
+                        if ((strcmp(pwd1,pwd2))!=0){
+                            cout<<"\nPASSWORDS DOESN'T MATCH, ENTER THE PASSWORDS AGAIN"<<endl;
+                            goto startpwd11;
+                        }
+                        ps="";
+                        for(i=0;i<strlen(pwd1);i++){
+                            ps = ps+pwd1[i];
+                        }
+                        ps = b.hash(ps);
+
+                        cout<<"\nENTER THE NEW 10-DIGIT PHONE NUMBER OF THE CUSTOMER :"<<endl;
+                        for(;;){
+                                cin>>pno;
+                                if(b.is_digits(pno)){
+                                    if(strlen(pno.c_str())==10){
+                                        break;
+                                    }else{
+                                        cout<<"THE PHONE NUMBER MUST BE 10 DIGITS!!!"<<endl;
+                                    }
+                                }else{
+                                    cout<<"THE PHONE NUMBER MUST CONTAIN ONLY NUMERICAL DIGITS!!!"<<endl;
+                                }
+                        }
+                        strcat(buf,pno.c_str());
+                        strcat(buf,"|");
+
+                        strcat(buf,c[ptr].Amt);
+                        cout<<c[ptr].Amt;
+                        strcat(buf,"|");
+
+                        strcat(buf,ps.c_str());
+                        strcat(buf,"|");
+
+                        for(;;){
+                            cout<<"ENTER THE UPDATED DATE OF BIRTH OF THE CUSTOMER IN [DD/MM/YYYY] FORMAT:"<<endl;
+                            cin>>dob;
+                                DOB[0] = "";
+                                DOB[1] = "";
+                                DOB[2] = "";
+                                j=0;
+                            if(strlen(dob)==10){
+                                for(i=0;i<10;i++){
+                                    if(dob[i]=='/'){
+                                        if(j==2){
+                                            break;
+                                        }
+                                        j++;
+                                        continue;
+                                    }
+                                    DOB[j]+=dob[i];
+                                }
+                                date = atoi(DOB[0].c_str());
+                                month = atoi(DOB[1].c_str());
+                                year = atoi(DOB[2].c_str());
+                            }else{
+                                continue;
+                            }
+                            if(year<2020 && year>1900){
+                                if((year%4==0)&&(year%10!=0)||(year%400==0)){
+                                    if(month<13){
+                                        if(month==2){
+                                            if(date<30){
+                                                break;
+                                            }
+                                        }else if(month == 1 ||month == 3 ||month == 5 ||month == 7 ||month == 8 ||month == 10 ||month == 12){
+                                            if(date<32){
+                                                break;
+                                            }
+                                        }else{
+                                            if(date<31){
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    if(month<13){
+                                        if(month==2){
+                                            if(date<29){
+                                                break;
+                                            }
+                                        }else if(month == 1 ||month == 3 ||month == 5 ||month == 7 ||month == 8 ||month == 10 ||month == 12){
+                                            if(date<32){
+                                                break;
+                                            }
+                                        }else{
+                                            if(date<31){
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        }
+                        if(strlen(DOB[0].c_str())==1){
+                            strcat(buf,"0");
+                        }
+                        strcat(buf,DOB[0].c_str());
+                        strcat(buf,"/");
+                        if(strlen(DOB[1].c_str())==1){
+                            strcat(buf,"0");
+                        }
+                        strcat(buf,DOB[1].c_str());
+                        strcat(buf,"/");
+                        strcat(buf,DOB[2].c_str());
+                        strcat(buf,"|");
+
+                        strcat(buf,c[ptr].IFSC);
+                        strcat(buf,"|");
+
+                        strcat(buf,c[ptr].addedBy);
+                        strcat(buf,"|");
+
+                        strcat(buf,c[ptr].location);
+                        strcat(buf,"|");
+
+                        strcat(buf,c[ptr].branchCode);
+                        strcat(buf,"\n");
+                        
+                    }
+                }
+                file.open("ahrecord.txt",ios::out);
+                    for (j=0;j<noOfCus;j++){
+                        if(strcmp(c[j].AcNo,id)==0){
+                            if(strlen(buf)<100){
+                                file<<"0"<<(strlen(buf)+4)<<"|"<<buf;
+                            }else{
+                                file<<(strlen(buf)+4)<<"|"<<buf;
+                            }
+                        }else{
+                            file<<c[j].leni<<"|"<<c[j].rrn<<"|"<<c[j].name<<"|"<<c[j].AcType<<"|"<<c[j].CID<<"|"<<c[j].AcNo<<"|"<<c[j].Address<<"|"<<c[j].email<<"|"<<c[j].pno<<"|";
+                            file<<c[j].Amt<<"|"<<c[j].pwd<<"|"<<c[j].dob<<"|"<<c[j].IFSC<<"|"<<c[j].addedBy<<"|"<<c[j].location<<"|"<<c[j].branchCode<<"\n";    
+                        }
+                    }
+                file.close();
+
+                file.open("ahrecord.txt",ios::in);
+                    i=0;
+                    for (j=0;j<noOfCus;j++){
+                        file.getline(c[i].leni,99,'|');
+                        file.getline(c[i].rrn,99,'|');
+                        file.getline(c[i].name,99,'|');
+                        file.getline(c[i].AcType,99,'|');
+                        file.getline(c[i].CID,99,'|');
+                        file.getline(c[i].AcNo,99,'|');
+                        file.getline(c[i].Address,999,'|');
+                        file.getline(c[i].email,99,'|');
+                        file.getline(c[i].pno,99,'|');
+                        file.getline(c[i].Amt,99,'|');
+                        file.getline(c[i].pwd,99,'|');
+                        file.getline(c[i].dob,11,'|');
+                        file.getline(c[i].IFSC,12,'|');
+                        file.getline(c[i].addedBy,9,'|');
+                        file.getline(c[i].location,99,'|');
+                        file.getline(c[i].branchCode,99,'\n');
+                        i++;
+                    }
+                file.close();
+
+                file.open("ahindex.txt",ios::out);
+                    for(j=0;j<noOfCus;j++){
+                        k=0;
+                        for(i=0;i<j;i++){
+                            k+=atoi(c[i].leni);
+                        }
+                        file<<c[j].rrn<<"|"<<c[j].name<<"|"<<c[j].AcNo<<"|"<<c[j].pwd<<"|"<<k<<"\n";
+                    }
+                file.close();
+
             }
     };
     employees e;
