@@ -1275,10 +1275,7 @@ void bank::employee(){
                             break;
                         case '4':
                             updateCustomerAccount();
-                            system("clear");
-                            cout<<"DETAILS SUCCESSFULLY UPDATED"<<endl;
                             cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
-                            getch();
                             getch();
                             system("clear");
                             break;
@@ -1295,8 +1292,8 @@ void bank::employee(){
                             system("clear");
                             break;
                         case '7':
+                            deleteCustomerAccount();
                             cout<<"\nPRESS ANY KEY TO RETURN TO MAIN MENU......";
-                            getch();
                             getch();
                             system("clear");
                             break;
@@ -2112,7 +2109,7 @@ void bank::employee(){
                     cout<<"CUSTOMER WITH NAME '"<<name<<"' NOT FOUND"<<endl;
                     return;
                 } else if (found==1){
-                    cout<<"CUSTOMER DETAILS : "<<endl;
+                    cout<<"CUSTOMER FOUND : "<<endl;
                     file.open("ahindex.txt",ios::in);
                         for(j=0;j<noOfCus;j++){
                             file.getline(mname,99,'|');        
@@ -2127,7 +2124,8 @@ void bank::employee(){
                         }       
                     file.close();
                 } else{
-                    cout<<"SELECT THE ACCOUNT NO\n"<<endl;
+                    cout<<"CUSTOMER FOUND : "<<endl;
+                    cout<<"SELECT THE ACCOUNT NO :\n"<<endl;
                     file.open("ahindex.txt",ios::in);
                     i=0;
                     for(j=0;j<noOfCus;j++){
@@ -2529,6 +2527,135 @@ void bank::employee(){
                         file<<c[j].rrn<<"|"<<c[j].name<<"|"<<c[j].AcNo<<"|"<<c[j].pwd<<"|"<<k<<"\n";
                     }
                 file.close();
+                system("clear");
+                cout<<"DETAILS SUCCESSFULLY UPDATED"<<endl;
+
+            }
+            void deleteCustomerAccount(){
+                cout<<"ENTER THE NAME OF THE CUSTOMER TO BE DELETED :";
+                getline(cin,name);
+                found=0;
+                file.open("ahindex.txt",ios::in);
+                    for(j=0;j<noOfCus;j++){
+                        file.getline(mname,99,'|');
+                        file.getline(mname,99,'|');
+                        if(strcmp(name.c_str(),mname)==0){
+                            found++;
+                        }
+                        file.getline(mname,99,'\n');
+                    }
+                file.close();
+                system("clear");
+                if(found==0){
+                    cout<<"CUSTOMER WITH NAME '"<<name<<"' NOT FOUND"<<endl;
+                    return;
+                } else if (found==1){
+                    cout<<"CUSTOMER FOUND !!!!!! "<<endl;
+                    file.open("ahindex.txt",ios::in);
+                        for(j=0;j<noOfCus;j++){
+                            file.getline(mname,99,'|');        
+                            file.getline(mname,99,'|'); 
+                            if(strcmp(mname,name.c_str())==0){         
+                                file.getline(id,99,'|');      
+                                file.getline(mname,99,'|'); 
+                                file.getline(mname,99,'\n'); 
+                                break;
+                            }       
+                            file.getline(buf,999,'\n'); 
+                        }       
+                    file.close();
+                } else{
+                    cout<<"CUSTOMER FOUND !!!!!! "<<endl;
+                    cout<<"SELECT THE ACCOUNT NO :\n"<<endl;
+                    file.open("ahindex.txt",ios::in);
+                    i=0;
+                    for(j=0;j<noOfCus;j++){
+                        file.getline(mname,99,'|');
+                        file.getline(mname,99,'|');
+                        if(strcmp(name.c_str(),mname)==0){
+                            file.getline(mname,99,'|');
+                            i++;
+                            cout<<i<<": "<<mname<<endl;
+                        }
+                        file.getline(mname,99,'\n');
+                    }
+                    file.close();
+                    pwd = getch();
+                    dob[0] = pwd;
+                    dob[1] = ';';
+                    i = atoi(dob);
+
+                    file.open("ahindex.txt",ios::in); 
+                    k=0;
+                    for(j=0;j<noOfCus;j++){
+                        file.getline(mname,99,'|');
+                        file.getline(mname,99,'|');
+                        if(strcmp(name.c_str(),mname)==0){
+                            k++;
+                            file.getline(mname,99,'|');
+                            if(k==i){
+                                strcpy(id,mname);
+                                file.getline(mname,99,'|');
+                                file.getline(mname,99,'\n');
+                                break;
+                            }
+                        }
+                        file.getline(buf,999,'\n');
+                    }
+                    file.close();
+                                      
+                }
+
+                file.open("ahrecord.txt",ios::in);
+                    i=0;
+                    for (j=0;j<noOfCus;j++){
+                        file.getline(c[i].leni,99,'|');
+                        file.getline(c[i].rrn,99,'|');
+                        file.getline(c[i].name,99,'|');
+                        file.getline(c[i].AcType,99,'|');
+                        file.getline(c[i].CID,99,'|');
+                        file.getline(c[i].AcNo,99,'|');
+                        file.getline(c[i].Address,999,'|');
+                        file.getline(c[i].email,99,'|');
+                        file.getline(c[i].pno,99,'|');
+                        file.getline(c[i].Amt,99,'|');
+                        file.getline(c[i].pwd,99,'|');
+                        file.getline(c[i].dob,11,'|');
+                        file.getline(c[i].IFSC,12,'|');
+                        file.getline(c[i].addedBy,9,'|');
+                        file.getline(c[i].location,99,'|');
+                        file.getline(c[i].branchCode,99,'\n');
+                        i++;
+                    }
+                file.close();
+                
+                file.open("ahrecord.txt",ios::out);
+                for (ptr=0;ptr<noOfCus;ptr++){
+                    if(strcmp(c[ptr].AcNo,id)==0){
+                        c[ptr].leni[0]='0';
+                        c[ptr].leni[1]=';';
+                        continue;
+                    }
+                    file<<c[ptr].leni<<"|"<<c[ptr].rrn<<"|"<<c[ptr].name<<"|"<<c[ptr].AcType<<"|"<<c[ptr].CID<<"|"<<c[ptr].AcNo<<"|"<<c[ptr].Address<<"|"<<c[ptr].email<<"|"<<c[ptr].pno<<"|";
+                    file<<c[ptr].Amt<<"|"<<c[ptr].pwd<<"|"<<c[ptr].dob<<"|"<<c[ptr].IFSC<<"|"<<c[ptr].addedBy<<"|"<<c[ptr].location<<"|"<<c[ptr].branchCode<<"\n";
+                }
+                file.close();
+
+                file.open("ahindex.txt",ios::out);
+                    for(j=0;j<noOfCus;j++){
+                        if(strcmp(c[j].AcNo,id)==0){
+                            continue;
+                        }
+                        k=0;
+                        for(i=0;i<j;i++){
+                            k+=atoi(c[i].leni);
+                        }
+                        file<<c[j].rrn<<"|"<<c[j].name<<"|"<<c[j].AcNo<<"|"<<c[j].pwd<<"|"<<k<<"\n";
+                    }
+                file.close();
+                system("clear");
+                noOfCus--;
+                cout<<"CUSTOMER ACCOUNT SUCCESSFULLY DELETED"<<endl;
 
             }
     };
